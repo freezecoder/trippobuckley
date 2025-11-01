@@ -23,37 +23,160 @@
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="trippo_user">
+  <meta name="apple-mobile-web-app-title" content="Buckley Transport">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>trippo_user</title>
+  <title>Buckley Transport</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Google Maps JavaScript API - MUST load BEFORE Flutter for web platform -->
+  <!-- According to: https://developers.google.com/maps/flutter-package/config -->
+  <!-- This is required for google_maps_flutter_web to work correctly -->
+  <script>
+    // Define callback BEFORE loading the script
+    window.googleMapsLoaded = function() {
+      window.googleMapsReady = true;
+      console.log('✅ Google Maps API callback triggered');
+      
+      // Wait a moment for libraries to fully initialize
+      setTimeout(function() {
+        if (window.google && window.google.maps) {
+          console.log('✅ Google Maps object available');
+          console.log('   Places:', !!window.google.maps.places);
+          console.log('   DirectionsService:', !!window.google.maps.DirectionsService);
+          console.log('   Geocoder:', !!window.google.maps.Geocoder);
+          console.log('   LatLng:', !!window.google.maps.LatLng);
+        } else {
+          console.error('❌ Google Maps object not found after callback');
+        }
+      }, 100);
+    };
+    
+    // Error handler if script fails to load
+    window.googleMapsError = function() {
+      console.error('❌ Google Maps API script failed to load');
+      window.googleMapsReady = false;
+    };
+  </script>
+  <!-- Load Google Maps API WITHOUT defer/async - must load synchronously -->
+  <!-- Add error handler and ensure script loads before Flutter -->
+  <script 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsK0I2lw7YP3qhUthMBtlsiJ31WVkPrY&libraries=places,geometry,drawing&callback=googleMapsLoaded"
+    onerror="window.googleMapsError()">
+  </script>
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
+    var serviceWorkerVersion = {{flutter_service_worker_version}};
   </script>
   <!-- This script adds the flutter initialization JS code -->
+  <!-- Note: Flutter script CAN be deferred since Google Maps loads first -->
   <script src="flutter.js" defer></script>
-</head>
-<body>
   <script>
+    // Ensure Google Maps API is loaded before Flutter initializes
+    function waitForGoogleMaps(callback, maxAttempts) {
+      maxAttempts = maxAttempts || 100; // Default 10 seconds
+      
+      if (window.google && window.google.maps && window.google.maps.places) {
+        console.log('Google Maps API loaded successfully');
+        callback();
+      } else if (maxAttempts > 0) {
+        setTimeout(function() {
+          waitForGoogleMaps(callback, maxAttempts - 1);
+        }, 100);
+      } else {
+        console.error('Google Maps API failed to load after 10 seconds');
+        // Still proceed with Flutter initialization
+        callback();
+      }
+    }
+    
+    // Check immediately if Google Maps is already loaded (script might have loaded before this code runs)
+    function checkGoogleMapsImmediate() {
+      var hasGoogle = typeof window.google !== 'undefined';
+      var hasMaps = hasGoogle && typeof window.google.maps !== 'undefined';
+      var hasCallback = window.googleMapsReady === true;
+      
+      if (hasGoogle && hasMaps && hasCallback) {
+        console.log('✅ Google Maps already loaded before Flutter initialization');
+        return true;
+      }
+      return false;
+    }
+    
     window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
+      // For Flutter Web with google_maps_flutter, we need Google Maps API loaded first
+      // Check if Google Maps is ready, wait if needed (but don't block too long)
+      var attempts = 0;
+      var maxAttempts = 100; // 10 seconds max wait (increased from 5)
+      
+      function initializeFlutter() {
+        console.log('🚀 Initializing Flutter...');
+        _flutter.loader.load({
+          serviceWorkerSettings: {
+            serviceWorkerVersion: serviceWorkerVersion,
+          },
+        });
+      }
+      
+      function checkAndInitialize() {
+        var mapsReady = window.googleMapsReady === true;
+        var hasGoogle = typeof window.google !== 'undefined';
+        var hasMaps = hasGoogle && typeof window.google.maps !== 'undefined';
+        var hasPlaces = hasMaps && typeof window.google.maps.places !== 'undefined';
+        var hasDirections = hasMaps && typeof window.google.maps.DirectionsService !== 'undefined';
+        var hasGeocoder = hasMaps && typeof window.google.maps.Geocoder !== 'undefined';
+        var hasLatLng = hasMaps && typeof window.google.maps.LatLng !== 'undefined';
+        
+        if (mapsReady && hasGoogle && hasMaps && hasPlaces && hasDirections && hasGeocoder && hasLatLng) {
+          console.log('✅ Google Maps API confirmed ready with ALL libraries');
+          console.log('   ✓ Places, ✓ DirectionsService, ✓ Geocoder, ✓ LatLng');
+          initializeFlutter();
+        } else if (attempts < maxAttempts) {
+          attempts++;
+          if (attempts % 10 === 0) {
+            console.log('⏳ Waiting for Google Maps... (attempt ' + attempts + '/' + maxAttempts + ')', {
+              callback: mapsReady,
+              google: hasGoogle,
+              maps: hasMaps,
+              places: hasPlaces,
+              directions: hasDirections,
+              geocoder: hasGeocoder,
+              latLng: hasLatLng
+            });
+          }
+          setTimeout(checkAndInitialize, 100);
+        } else {
+          console.error('❌ Google Maps API not fully ready after 10 seconds');
+          console.error('   Final Status:', {
+            callback: mapsReady,
+            google: hasGoogle,
+            maps: hasMaps,
+            places: hasPlaces,
+            directions: hasDirections,
+            geocoder: hasGeocoder,
+            latLng: hasLatLng
           });
+          console.error('   Check browser Network tab for script loading errors');
+          console.error('   Initializing Flutter anyway - app will retry when needed');
+          // Initialize anyway - the google_places_web.dart code will handle retries
+          initializeFlutter();
         }
-      });
+      }
+      
+      // Check if already loaded
+      if (checkGoogleMapsImmediate()) {
+        initializeFlutter();
+      } else {
+        // Start checking
+        checkAndInitialize();
+      }
     });
   </script>
+</head>
+<body>
 </body>
 </html>

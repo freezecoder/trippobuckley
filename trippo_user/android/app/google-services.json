@@ -1,79 +1,45 @@
 {
   "project_info": {
-    "project_number": "1026243871590",
-    "project_id": "ridewithus-e7ed1",
-    "storage_bucket": "ridewithus-e7ed1.appspot.com"
+    "project_number": "833975987471",
+    "project_id": "trippo-42089",
+    "storage_bucket": "trippo-42089.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1026243871590:android:4fbac61d2286ba51997ea7",
+        "mobilesdk_app_id": "1:833975987471:android:ebb1f63ab888c8532b627a",
         "android_client_info": {
-          "package_name": "dev.hyderali.ridewithus"
+          "package_name": "com.buckley.trippo"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "1026243871590-qvha9gsb2adhslnu0hseqt11guqv0q6k.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCxbxTJOfO-sFfSV2tg6DRQj9OqiDnHSek"
+          "current_key": "AIzaSyB5iCh00xpYX-5Q07ITRRyRz3UYoMqE2ns"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1026243871590-qvha9gsb2adhslnu0hseqt11guqv0q6k.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1026243871590-9dmnpidl9ilk55da29mu55tna512chfo.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "dev.hyderali.ridewithus"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1026243871590:android:8883399b5228ee2a997ea7",
+        "mobilesdk_app_id": "1:833975987471:android:b89f0b689557e9e22b627a",
         "android_client_info": {
           "package_name": "dev.hyderali.trippo_user"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "1026243871590-qvha9gsb2adhslnu0hseqt11guqv0q6k.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCxbxTJOfO-sFfSV2tg6DRQj9OqiDnHSek"
+          "current_key": "AIzaSyB5iCh00xpYX-5Q07ITRRyRz3UYoMqE2ns"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1026243871590-qvha9gsb2adhslnu0hseqt11guqv0q6k.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1026243871590-9dmnpidl9ilk55da29mu55tna512chfo.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "dev.hyderali.ridewithus"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

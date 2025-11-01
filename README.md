@@ -1,8 +1,8 @@
-# Trippo - Uber Clone App (Flutter + Firebase)
+# BTrips - Uber Clone App (Flutter + Firebase)
 
 ## Overview
 
-**Trippo** is an Uber clone built using **Flutter** for cross-platform mobile app development (iOS and Android) and **Firebase** for backend services. The app provides a seamless experience for riders and drivers, including features like ride booking, real-time tracking, payment integration, and ratings. With Firebase, Trippo ensures real-time communication, user authentication, and cloud storage.
+**BTrips** is an Uber clone built using **Flutter** for cross-platform mobile app development (iOS and Android) and **Firebase** for backend services. The app provides a seamless experience for riders and drivers, including features like ride booking, real-time tracking, payment integration, and ratings. With Firebase, BTrips ensures real-time communication, user authentication, and cloud storage.
 
 ## Features
 
@@ -55,14 +55,14 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/trippo-flutter.git
+git clone https://github.com/your-username/btrips-flutter.git
 ```
 
 ### 2. Firebase Setup
 
 #### Create Firebase Project:
 1. Go to [Firebase Console](https://console.firebase.google.com/).
-2. Create a new project (e.g., "Trippo").
+2. Create a new project (e.g., "BTrips").
 3. Add Firebase services (Firestore, Firebase Authentication, Firebase Cloud Functions, Firebase Cloud Messaging).
 4. Add **Google Maps API** and **Stripe** integration.
 
@@ -82,7 +82,7 @@ git clone https://github.com/your-username/trippo-flutter.git
 ### 3. Install Dependencies
 
 ```bash
-cd trippo-flutter
+cd btrips-flutter
 flutter pub get
 ```
 
@@ -136,7 +136,7 @@ Make sure your Android or iOS environment is set up correctly.
 
 ## Contributing
 
-We welcome contributions to improve **Trippo**. If you'd like to contribute:
+We welcome contributions to improve **BTrips**. If you'd like to contribute:
 
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature-name`).
@@ -146,11 +146,11 @@ We welcome contributions to improve **Trippo**. If you'd like to contribute:
 
 ## License
 
-**Trippo** is open-source and available under the [MIT License](LICENSE).
+**BTrips** is open-source and available under the [MIT License](LICENSE).
 
 ---
 
-**Trippo** - Your reliable and convenient ride-hailing solution.
+**BTrips** - Your reliable and convenient ride-hailing solution.
 ```
 
 ### Key Features of the **README.md**:

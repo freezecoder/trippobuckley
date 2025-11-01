@@ -1,11 +1,11 @@
 {
-    "name": "trippo_user",
-    "short_name": "trippo_user",
+    "name": "Buckley Transport",
+    "short_name": "Buckley Transport",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Buckley Transport - Transportation service app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

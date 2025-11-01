@@ -1,0 +1,230 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================
+    // UNIFIED BTRIPS APP SECURITY RULES
+    // Version 2.0 - Role-based access control
+    // ============================================
+    
+    // Helper Functions
+    // ============================================
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if user owns the document
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    // Get user type from users collection
+    function getUserType() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userType;
+    }
+    
+    // Check if user is a driver
+    function isDriver() {
+      return isAuthenticated() && getUserType() == 'driver';
+    }
+    
+    // Check if user is a regular user/passenger
+    function isRegularUser() {
+      return isAuthenticated() && getUserType() == 'user';
+    }
+    
+    
+    // Users Collection (Central User Registry)
+    // ============================================
+    match /users/{userId} {
+      // Anyone authenticated can read user documents (to see driver/passenger info)
+      allow read: if isAuthenticated();
+      
+      // Users can create their own document during registration
+      allow create: if isAuthenticated() && 
+                      isOwner(userId) &&
+                      request.resource.data.userType in ['user', 'driver'];
+      
+      // Users can update only their own document (phone, name, etc.)
+      allow update: if isAuthenticated() && isOwner(userId);
+      
+      // Prevent deletion
+      allow delete: if false;
+    }
+    
+    
+    // Drivers Collection (Driver-Specific Data)
+    // ============================================
+    match /drivers/{userId} {
+      // Everyone can read driver data (for finding nearby drivers)
+      allow read: if isAuthenticated();
+      
+      // Only drivers can create/update their own driver document
+      allow create, update: if isAuthenticated() && 
+                              isOwner(userId) && 
+                              isDriver();
+      
+      // Prevent deletion
+      allow delete: if false;
+    }
+    
+    
+    // User Profiles Collection (User-Specific Data)
+    // ============================================
+    match /userProfiles/{userId} {
+      // Anyone authenticated can read user profiles
+      allow read: if isAuthenticated();
+      
+      // Users can update their own profile
+      allow create, update: if isAuthenticated() && 
+                              isOwner(userId) && 
+                              isRegularUser();
+      
+      // Drivers can update ONLY the rating field (when rating passengers)
+      allow update: if isAuthenticated() && 
+                      isDriver() &&
+                      // Only allow updating rating field
+                      request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating']);
+      
+      // Prevent deletion
+      allow delete: if false;
+    }
+    
+    
+    // Ride Requests Collection (Active Rides)
+    // ============================================
+    match /rideRequests/{requestId} {
+      // Anyone authenticated can read ride requests
+      allow read: if isAuthenticated();
+      
+      // Only regular users can create ride requests
+      allow create: if isAuthenticated() && 
+                      isRegularUser() &&
+                      request.resource.data.userId == request.auth.uid;
+      
+      // Users can update their own requests
+      // Drivers can accept pending rides (driverId is null)
+      // Drivers can update/cancel rides assigned to them
+      allow update: if isAuthenticated() && (
+        // User updating their own ride (including cancellation)
+        (resource.data.userId == request.auth.uid) ||
+        // Driver accepting a pending ride (driverId is null → being set)
+        (isDriver() && resource.data.driverId == null && 
+         request.resource.data.driverId == request.auth.uid &&
+         resource.data.status == 'pending') ||
+        // Driver updating their assigned ride (including cancellation)
+        (resource.data.driverId == request.auth.uid && isDriver())
+      );
+      
+      // Users can delete their own pending requests
+      allow delete: if isAuthenticated() && 
+                      resource.data.userId == request.auth.uid &&
+                      resource.data.status == 'pending';
+    }
+    
+    
+    // Ride History Collection (Completed Rides)
+    // ============================================
+    match /rideHistory/{rideId} {
+      // Users and drivers can read rides they participated in
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.driverId == request.auth.uid
+      );
+      
+      // Allow drivers to create history when completing/cancelling rides
+      // Allow users/drivers to update for ratings
+      allow create: if isAuthenticated() && (
+        (request.resource.data.driverId == request.auth.uid && isDriver()) ||
+        (request.resource.data.userId == request.auth.uid && isRegularUser())
+      );
+      
+      allow update: if isAuthenticated() && (
+        (resource.data.userId == request.auth.uid && isRegularUser()) ||
+        (resource.data.driverId == request.auth.uid && isDriver())
+      );
+      
+      // Prevent deletion
+      allow delete: if false;
+    }
+    
+    
+    // Ratings Collection (Dedicated Rating Records)
+    // ============================================
+    match /ratings/{ratingId} {
+      // Anyone authenticated can read ratings
+      allow read: if isAuthenticated();
+      
+      // Only the person who gave the rating can create it
+      // Must be the rater and have correct role
+      allow create: if isAuthenticated() && 
+                      request.resource.data.ratedBy == request.auth.uid &&
+                      // Must have required fields
+                      request.resource.data.keys().hasAll([
+                        'ratingType', 'rideId', 'ratedBy', 'ratedUser', 
+                        'rating', 'createdAt'
+                      ]) &&
+                      // Rating must be between 1 and 5
+                      request.resource.data.rating >= 1 &&
+                      request.resource.data.rating <= 5 &&
+                      // Must be either driver rating user OR user rating driver
+                      (
+                        (request.resource.data.ratingType == 'driver-to-user' && isDriver()) ||
+                        (request.resource.data.ratingType == 'user-to-driver' && isRegularUser())
+                      );
+      
+      // Ratings are immutable (can't be updated after creation)
+      allow update: if false;
+      
+      // Ratings cannot be deleted (permanent record)
+      allow delete: if false;
+    }
+    
+    
+    // Preset Locations Collection (Popular Destinations)
+    // ============================================
+    match /presetLocations/{locationId} {
+      // Anyone (including unauthenticated) can read active preset locations
+      // This allows the app to show locations before login
+      allow read: if true;
+      
+      // Only authenticated users can write (for now - should be admin only in production)
+      // TODO: Restrict to admin role only
+      allow write: if isAuthenticated();
+      
+      // Production rule (uncomment when admin role is implemented):
+      // allow write: if isAuthenticated() && getUserType() == 'admin';
+    }
+    
+    
+    // Preset Locations Collection (Airports, Popular Destinations)
+    // ============================================
+    match /presetLocations/{locationId} {
+      // Anyone authenticated can read preset locations
+      allow read: if isAuthenticated();
+      
+      // Only admins can create/update/delete (TODO: add admin role check)
+      allow create, update, delete: if false; // Restrict to admin only
+    }
+    
+    
+    // Legacy Collections (Backward Compatibility)
+    // ============================================
+    
+    // Old driver collection format - still allow reads
+    match /Drivers/{driverEmail} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Deprecated, use drivers/ collection
+    }
+    
+    // Old user ride history by email
+    match /{userEmail}/{rideId} {
+      // Allow users to read their own ride history
+      allow read: if isAuthenticated() && 
+                    request.auth.token.email == userEmail;
+      allow write: if false; // Deprecated, use rideHistory/ collection
+    }
+  }
+}

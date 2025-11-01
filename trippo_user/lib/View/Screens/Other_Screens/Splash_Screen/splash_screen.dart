@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trippo_user/View/Screens/Other_Screens/Splash_Screen/splash_logics.dart';
+import 'package:btrips_unified/View/Screens/Other_Screens/Splash_Screen/splash_logics.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
               height: size.height,
               child: Center(
                 child: Text(
-                  "Trippo",
+                  "Buckley Transport",
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall!

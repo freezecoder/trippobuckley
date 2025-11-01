@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trippo_user/View/Screens/Auth_Screens/Register_Screen/register_logics.dart';
-import 'package:trippo_user/View/Screens/Auth_Screens/Register_Screen/register_providers.dart';
-import '../../../Components/all_components.dart';
-import '../../../Routes/routes.dart';
+import 'package:btrips_unified/View/Components/all_components.dart';
+import 'package:btrips_unified/View/Screens/Auth_Screens/Register_Screen/register_logics.dart';
+import 'package:btrips_unified/View/Screens/Auth_Screens/Register_Screen/register_providers.dart';
+import 'package:btrips_unified/core/constants/route_constants.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -106,10 +106,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  context.goNamed(Routes().login);
+                                  context.goNamed(RouteNames.login);
                                 },
                                 child: Text(
-                                  "Login.",
+                                  "Already have an account? Login.",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall!

@@ -12,4 +12,8 @@ class Routes {
 
   // Main Sub Routes
   final String whereTo = "whereTo";
+  
+  // Main Navigation Routes
+  final String mainNavigation = "mainNavigation";
+  final String profile = "profile";
 }

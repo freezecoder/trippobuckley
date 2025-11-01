@@ -9,6 +9,8 @@ class DriverModel {
   String driverStatus;
   String email;
   String name;
+  double rate; // Vehicle rate multiplier (stored in Firestore, default 3.0)
+  
   DriverModel(
      this.carName,
      this.carPlateNum,
@@ -17,5 +19,6 @@ class DriverModel {
      this.driverStatus,
      this.email,
      this.name,
+     this.rate,
   );
 }

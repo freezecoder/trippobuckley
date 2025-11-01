@@ -1,0 +1,58 @@
+# Flutter build artifacts
+.dart_tool/
+build/
+!build/web/
+
+# Dependencies
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files
+test/
+*_test.dart
+
+# Documentation
+*.md
+!README.md
+
+# Scripts
+scripts/
+
+# Platform specific
+android/
+ios/
+linux/
+macos/
+windows/
+
+# Node modules (if any)
+node_modules/
+
+# Firestore credentials (security)
+firestore_credentials.json
+google-services.json
+*.p12
+*.jks
+*.keystore
+
+# Local config
+.env
+.env.local
+*.local
+
+# Git
+.git/
+.gitignore
+

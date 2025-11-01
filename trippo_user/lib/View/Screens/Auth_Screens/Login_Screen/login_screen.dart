@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trippo_user/View/Components/all_components.dart';
-import 'package:trippo_user/View/Screens/Auth_Screens/Login_Screen/login_logics.dart';
-import 'package:trippo_user/View/Screens/Auth_Screens/Login_Screen/login_providers.dart';
-import '../../../Routes/routes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:btrips_unified/View/Components/all_components.dart';
+import 'package:btrips_unified/View/Screens/Auth_Screens/Login_Screen/login_logics.dart';
+import 'package:btrips_unified/View/Screens/Auth_Screens/Login_Screen/login_providers.dart';
+import 'package:btrips_unified/core/constants/route_constants.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 })),
                             TextButton(
                                 onPressed: () {
-                                  context.goNamed(Routes().register);
+                                  context.goNamed(RouteNames.roleSelection);
                                 },
                                 child: Text(
                                   "Don't have an account? Sign Up.",

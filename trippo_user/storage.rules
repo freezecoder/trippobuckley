@@ -1,0 +1,71 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ============================================
+    // UNIFIED BTRIPS APP STORAGE RULES
+    // Version 2.0 - Profile pictures and vehicle images
+    // ============================================
+    
+    // Helper Functions
+    // ============================================
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if user owns the file
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    // Check file size (max 5MB for images)
+    function isValidSize() {
+      return request.resource.size <= 5 * 1024 * 1024;
+    }
+    
+    // Check if file is an image
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    
+    // Profile Pictures
+    // ============================================
+    // Path: profile_pictures/{userId}/{fileName}
+    match /profile_pictures/{userId}/{fileName} {
+      // Users can read any profile picture (for viewing driver/user profiles)
+      allow read: if isAuthenticated();
+      
+      // Users can only upload/update/delete their own profile picture
+      allow write: if isAuthenticated() && 
+                     isOwner(userId) &&
+                     isImage() &&
+                     isValidSize();
+    }
+    
+    
+    // Vehicle Images (Optional Feature)
+    // ============================================
+    // Path: vehicle_images/{driverId}/{fileName}
+    match /vehicle_images/{driverId}/{fileName} {
+      // Anyone can read vehicle images (for seeing driver's car)
+      allow read: if isAuthenticated();
+      
+      // Only the driver can upload/update/delete their vehicle image
+      allow write: if isAuthenticated() && 
+                     isOwner(driverId) &&
+                     isImage() &&
+                     isValidSize();
+    }
+    
+    
+    // Deny all other paths
+    // ============================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trippo_user/Container/utils/error_notification.dart';
-import 'package:trippo_user/View/Routes/routes.dart';
+import 'package:btrips_unified/Container/utils/error_notification.dart';
+import 'package:btrips_unified/View/Routes/routes.dart';
 
 class SplashLogics{
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -43,7 +43,7 @@ class SplashLogics{
         } else {
           if (context.mounted) {
             ErrorNotification().showError(
-                context, "Location Access is required to run Trippo.");
+                context, "Location Access is required to run Buckley Transport.");
           }
           await Future.delayed(const Duration(seconds: 2));
           SystemChannels.platform
@@ -60,7 +60,7 @@ class SplashLogics{
           permission == LocationPermission.unableToDetermine) {
         if (context.mounted) {
           ErrorNotification()
-              .showError(context, "Location Access is required to run Trippo.");
+              .showError(context, "Location Access is required to run Buckley Transport.");
           await Future.delayed(const Duration(seconds: 2));
           SystemChannels.platform
               .invokeMethod("SystemNavigator.pop");

@@ -1,0 +1,47 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "trippo-42089",
+          "appId": "1:833975987471:android:b89f0b689557e9e22b627a",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "trippo-42089",
+          "appId": "1:833975987471:ios:80a9f59e5c1b6fea2b627a",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "trippo-42089",
+          "appId": "1:833975987471:ios:80a9f59e5c1b6fea2b627a",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "trippo-42089",
+          "configurations": {
+            "android": "1:833975987471:android:b89f0b689557e9e22b627a",
+            "ios": "1:833975987471:ios:80a9f59e5c1b6fea2b627a",
+            "macos": "1:833975987471:ios:80a9f59e5c1b6fea2b627a",
+            "web": "1:833975987471:web:132f4ec63e800ca02b627a"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}

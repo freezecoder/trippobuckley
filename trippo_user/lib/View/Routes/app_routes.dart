@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:trippo_user/View/Routes/routes.dart';
-import 'package:trippo_user/View/Screens/Auth_Screens/Login_Screen/login_screen.dart';
-import 'package:trippo_user/View/Screens/Auth_Screens/Register_Screen/register_screen.dart';
-import 'package:trippo_user/View/Screens/Main_Screens/Home_Screen/home_screen.dart';
-import 'package:trippo_user/View/Screens/Main_Screens/Sub_Screens/Where_To_Screen/where_to_screen.dart';
+import 'package:btrips_unified/View/Routes/routes.dart';
+import 'package:btrips_unified/View/Screens/Auth_Screens/Login_Screen/login_screen.dart';
+import 'package:btrips_unified/View/Screens/Auth_Screens/Register_Screen/register_screen.dart';
+import 'package:btrips_unified/View/Screens/Main_Screens/Home_Screen/home_screen.dart';
+import 'package:btrips_unified/View/Screens/Main_Screens/Sub_Screens/Where_To_Screen/where_to_screen.dart';
+import 'package:btrips_unified/View/Screens/Main_Screens/main_navigation.dart';
 
-import 'package:trippo_user/View/Screens/Other_Screens/Splash_Screen/splash_screen.dart';
+import 'package:btrips_unified/View/Screens/Other_Screens/Splash_Screen/splash_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -51,12 +52,20 @@ final List<RouteBase> allRoutes =[
         return const RegisterScreen();
       },
     ),
+    // Main Navigation (with bottom nav bar)
+    GoRoute(
+      name: Routes().mainNavigation,
+      path: '/${Routes().mainNavigation}',
+      builder: (BuildContext context, GoRouterState state) {
+        return const MainNavigation();
+      },
+    ),
+
+    // Legacy home route - redirect to main navigation
     GoRoute(
       name: Routes().home,
       path: '/${Routes().home}',
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomeScreen();
-      },
+      redirect: (context, state) => '/${Routes().mainNavigation}',
     ),
 
     // Main Routes

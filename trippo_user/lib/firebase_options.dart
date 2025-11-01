@@ -17,29 +17,17 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -52,11 +40,50 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCxbxTJOfO-sFfSV2tg6DRQj9OqiDnHSek',
-    appId: '1:1026243871590:android:a7994a12e9d25be7997ea7',
-    messagingSenderId: '1026243871590',
-    projectId: 'ridewithus-e7ed1',
-    storageBucket: 'ridewithus-e7ed1.appspot.com',
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBvBc3cpGs_8RXMv3Z-POG0vDpmNAwnIkI',
+    appId: '1:833975987471:web:132f4ec63e800ca02b627a',
+    messagingSenderId: '833975987471',
+    projectId: 'trippo-42089',
+    authDomain: 'trippo-42089.firebaseapp.com',
+    storageBucket: 'trippo-42089.firebasestorage.app',
+    measurementId: 'G-NQ1CCXPRVQ',
   );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyB5iCh00xpYX-5Q07ITRRyRz3UYoMqE2ns',
+    appId: '1:833975987471:android:b89f0b689557e9e22b627a',
+    messagingSenderId: '833975987471',
+    projectId: 'trippo-42089',
+    storageBucket: 'trippo-42089.firebasestorage.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDoe5IvSDlodUNIlQoLzxFDphABHzK7jxc',
+    appId: '1:833975987471:ios:80a9f59e5c1b6fea2b627a',
+    messagingSenderId: '833975987471',
+    projectId: 'trippo-42089',
+    storageBucket: 'trippo-42089.firebasestorage.app',
+    iosBundleId: 'dev.hyderali.btripsuser',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDoe5IvSDlodUNIlQoLzxFDphABHzK7jxc',
+    appId: '1:833975987471:ios:80a9f59e5c1b6fea2b627a',
+    messagingSenderId: '833975987471',
+    projectId: 'trippo-42089',
+    storageBucket: 'trippo-42089.firebasestorage.app',
+    iosBundleId: 'dev.hyderali.btripsuser',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBvBc3cpGs_8RXMv3Z-POG0vDpmNAwnIkI',
+    appId: '1:833975987471:web:0e207931c63e24472b627a',
+    messagingSenderId: '833975987471',
+    projectId: 'trippo-42089',
+    authDomain: 'trippo-42089.firebaseapp.com',
+    storageBucket: 'trippo-42089.firebasestorage.app',
+    measurementId: 'G-MRRNVM9B49',
+  );
+
 }
