@@ -5,7 +5,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:btrips_unified/Container/utils/keys.dart';
 import 'package:btrips_unified/Container/utils/http_client.dart';
-import 'package:btrips_unified/Container/utils/google_places_web.dart';
+import 'package:btrips_unified/Container/utils/google_places_stub.dart'
+    if (dart.library.html) 'package:btrips_unified/Container/utils/google_places_web.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Home_Screen/home_providers.dart';
 import '../../Model/direction_model.dart';
 import '../utils/error_notification.dart';
@@ -34,10 +35,10 @@ class AddressParser {
           Direction model = Direction(
               locationLatitude: userPosition.latitude,
               locationLongitude: userPosition.longitude,
-              humanReadableAddress: geocodeData["results"][0]["formatted_address"]);
+              humanReadableAddress: geocodeData?["results"][0]["formatted_address"]);
           ref.read(homeScreenPickUpLocationProvider.notifier).update((state) => model);
 
-          return geocodeData["results"][0]["formatted_address"];
+          return geocodeData?["results"][0]["formatted_address"];
         } catch (e) {
           debugPrint('JavaScript API failed, falling back to REST: $e');
           // Fall through to REST API fallback

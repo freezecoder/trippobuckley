@@ -6,7 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:btrips_unified/Container/utils/keys.dart';
 import 'package:btrips_unified/Container/utils/http_client.dart';
-import 'package:btrips_unified/Container/utils/google_places_web.dart';
+import 'package:btrips_unified/Container/utils/google_places_stub.dart'
+    if (dart.library.html) 'package:btrips_unified/Container/utils/google_places_web.dart';
 import 'package:btrips_unified/Container/utils/distance_calculator.dart';
 import 'package:btrips_unified/Model/direction_polyline_details_model.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Home_Screen/home_providers.dart';
@@ -133,11 +134,11 @@ class DirectionPolylines {
           );
 
           DirectionPolylineDetails model = DirectionPolylineDetails(
-            epoints: directionsData["routes"][0]["overview_polyline"]["points"],
-            distanceText: directionsData["routes"][0]["legs"][0]["distance"]["text"],
-            distanceValue: directionsData["routes"][0]["legs"][0]["distance"]["value"],
-            durationText: directionsData["routes"][0]["legs"][0]["duration"]["text"],
-            durationValue: directionsData["routes"][0]["legs"][0]["duration"]["value"],
+            epoints: directionsData?["routes"][0]["overview_polyline"]["points"],
+            distanceText: directionsData?["routes"][0]["legs"][0]["distance"]["text"],
+            distanceValue: directionsData?["routes"][0]["legs"][0]["distance"]["value"],
+            durationText: directionsData?["routes"][0]["legs"][0]["duration"]["text"],
+            durationValue: directionsData?["routes"][0]["legs"][0]["duration"]["value"],
           );
 
           return model;

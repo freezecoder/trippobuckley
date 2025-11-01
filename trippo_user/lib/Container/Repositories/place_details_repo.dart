@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:btrips_unified/Container/utils/keys.dart';
 import 'package:btrips_unified/Container/utils/http_client.dart';
-import 'package:btrips_unified/Container/utils/google_places_web.dart';
+import 'package:btrips_unified/Container/utils/google_places_stub.dart'
+    if (dart.library.html) 'package:btrips_unified/Container/utils/google_places_web.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Home_Screen/home_providers.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Sub_Screens/Where_To_Screen/where_to_providers.dart';
 import '../../Model/direction_model.dart';

@@ -42,12 +42,13 @@ dependencies:
   # State Management
   flutter_riverpod: ^2.3.6
   
-  # Firebase
-  firebase_core: ^2.15.0
-  firebase_auth: ^4.7.1
-  cloud_firestore: ^4.8.3
-  firebase_messaging: ^14.6.7
-  flutter_local_notifications: ^15.1.1
+  # Firebase (locked to versions compatible with dart:js)
+  firebase_core: '>=2.15.0 <2.16.0'
+  firebase_auth: '>=4.7.1 <4.8.0'
+  cloud_firestore: '>=4.8.3 <4.9.0'
+  firebase_messaging: '>=14.6.7 <14.7.0'
+  firebase_storage: '>=11.2.6 <11.3.0'
+  flutter_local_notifications: ^17.0.0
   
   # Maps & Location
   google_maps_flutter: ^2.8.0
@@ -67,7 +68,6 @@ dependencies:
   
   # Image Handling
   image_picker: ^1.0.4
-  firebase_storage: ^11.2.6
 
 dev_dependencies:
   flutter_test:
@@ -139,3 +139,8 @@ flutter:
 # Dependency overrides to fix compilation issues
 dependency_overrides:
   archive: ^4.0.7
+  # Pin platform interfaces to match Firebase plugin versions for dart:js compatibility
+  cloud_firestore_platform_interface: 5.15.4
+  cloud_firestore_web: 3.6.4
+  firebase_auth_platform_interface: 6.16.2
+  firebase_auth_web: 5.6.3
