@@ -96,8 +96,8 @@ class _DriverConfigScreenState extends ConsumerState<DriverConfigScreen> {
       ref.read(driverConfigIsLoadingProvider.notifier).update((state) => false);
 
       if (mounted && context.mounted) {
-        // Navigate to driver main after configuration
-        context.goNamed(RouteNames.driverMain);
+        // Navigate to unified home after configuration (will show driver UI)
+        context.go('/home');
       }
     } catch (e) {
       ref.read(driverConfigIsLoadingProvider.notifier).update((state) => false);

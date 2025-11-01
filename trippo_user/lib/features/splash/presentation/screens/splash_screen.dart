@@ -81,28 +81,41 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       if (user == null) {
         // Error: User authenticated but no data
         // Sign out and go to login
+        debugPrint('❌ No user data found for authenticated user');
         final authRepo = ref.read(authRepositoryProvider);
         await authRepo.logout();
         if (mounted) context.goNamed(RouteNames.login);
         return;
       }
 
+      // Log user data for debugging
+      debugPrint('✅ User data loaded:');
+      debugPrint('   Email: ${user.email}');
+      debugPrint('   Name: ${user.name}');
+      debugPrint('   UserType: ${user.userType}');
+      debugPrint('   isDriver: ${user.isDriver}');
+      debugPrint('   isRegularUser: ${user.isRegularUser}');
+
       // Route based on user role
       if (user.isDriver) {
+        debugPrint('🚗 User is a DRIVER, checking config...');
         // Check if driver has completed vehicle configuration
         final hasConfig =
             await ref.read(hasCompletedDriverConfigProvider.future);
 
         if (hasConfig) {
-          // Driver configured - go to driver main
-          if (mounted) context.goNamed(RouteNames.driverMain);
+          // Driver configured - go to unified home (will show driver UI)
+          debugPrint('✅ Driver configured, navigating to unified home');
+          if (mounted) context.go('/home');
         } else {
           // Driver not configured - go to config screen
+          debugPrint('⚠️  Driver not configured, navigating to: ${RouteNames.driverConfig}');
           if (mounted) context.goNamed(RouteNames.driverConfig);
         }
       } else {
-        // Regular user - go to user main
-        if (mounted) context.goNamed(RouteNames.userMain);
+        // Regular user - go to unified home (will show user UI)
+        debugPrint('👤 User is a PASSENGER, navigating to unified home');
+        if (mounted) context.go('/home');
       }
     } catch (e) {
       // Error during navigation - go to login

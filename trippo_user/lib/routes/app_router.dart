@@ -13,7 +13,7 @@ import '../features/shared/presentation/screens/rating_screen.dart';
 // Import existing screens (will be migrated later)
 import '../View/Screens/Auth_Screens/Login_Screen/login_screen.dart';
 import '../View/Screens/Auth_Screens/Register_Screen/register_screen.dart';
-import '../View/Screens/Main_Screens/main_navigation.dart';
+import '../features/shared/presentation/screens/unified_main_screen.dart';
 
 /// Global key for accessing navigator state
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -60,17 +60,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RegisterScreen(),
       ),
       
-      // Driver Routes
+      // Unified Main Route - Shows different UI based on user role
+      GoRoute(
+        path: '/home',
+        name: 'home',
+        builder: (context, state) => const UnifiedMainScreen(),
+      ),
+      
+      // Driver-specific setup (one-time config)
       GoRoute(
         path: RouteNames.driverConfig,
         name: RouteNames.driverConfig,
         builder: (context, state) => const DriverConfigScreen(),
-      ),
-      
-      GoRoute(
-        path: RouteNames.driverMain,
-        name: RouteNames.driverMain,
-        builder: (context, state) => const DriverMainNavigation(),
       ),
       
       // Shared Routes
@@ -87,28 +88,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             isDriver: isDriver,
           );
         },
-      ),
-      
-      // User Routes
-      GoRoute(
-        path: RouteNames.userMain,
-        name: RouteNames.userMain,
-        builder: (context, state) => const MainNavigation(),
-        routes: [
-          // Nested user routes (like where-to)
-          GoRoute(
-            path: 'where-to',
-            name: RouteNames.whereTo,
-            builder: (context, state) {
-              // final controller = state.extra; // Will be used when screen is migrated
-              return const Scaffold(
-                body: Center(
-                  child: Text('Where To Screen - To be migrated'),
-                ),
-              );
-            },
-          ),
-        ],
       ),
     ],
     
@@ -177,22 +156,19 @@ Future<String?> _handleRedirect(
       return RouteNames.login;
     }
     
-    // If authenticated and on auth pages, redirect to appropriate home
+    // If authenticated and on auth pages, redirect to home
     if (isAuthenticated && publicRoutes.contains(location)) {
       // Don't redirect from splash (it handles its own navigation)
       if (location == RouteNames.splash) {
         return null;
       }
       
-      // Get user data to determine role with timeout
+      // Check if driver needs to complete config
       final user = await container
           .read(currentUserProvider.future)
           .timeout(
             const Duration(seconds: 10),
-            onTimeout: () {
-              debugPrint('⚠️ User data fetch timeout, redirecting to login');
-              return null;
-            },
+            onTimeout: () => null,
           );
       
       if (user == null) {
@@ -202,39 +178,19 @@ Future<String?> _handleRedirect(
         return RouteNames.login;
       }
       
-      // Redirect based on role
+      // If driver without config, go to driver config
       if (user.isDriver) {
         final hasConfig =
             await container.read(hasCompletedDriverConfigProvider.future);
-        return hasConfig ? RouteNames.driverMain : RouteNames.driverConfig;
-      } else {
-        return RouteNames.userMain;
+        if (!hasConfig) {
+          debugPrint('🔀 Driver needs config, redirecting to driver-config');
+          return RouteNames.driverConfig;
+        }
       }
-    }
-    
-    // Check role-based route protection
-    if (isAuthenticated) {
-      final user = await container
-          .read(currentUserProvider.future)
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () => null,
-          );
       
-      if (user != null) {
-        // Prevent users from accessing driver routes
-        if (!user.isDriver && location.startsWith('/driver')) {
-          return RouteNames.userMain;
-        }
-        
-        // Prevent drivers from accessing user routes
-        if (user.isDriver && location.startsWith('/user')) {
-          // Check if driver completed config
-          final hasConfig =
-              await container.read(hasCompletedDriverConfigProvider.future);
-          return hasConfig ? RouteNames.driverMain : RouteNames.driverConfig;
-        }
-      }
+      // Otherwise, go to unified home (shows role-appropriate UI)
+      debugPrint('🔀 Router redirecting to unified home');
+      return '/home';
     }
     
     // Allow navigation

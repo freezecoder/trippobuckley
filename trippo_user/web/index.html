@@ -21,6 +21,7 @@
   <meta name="description" content="A new Flutter project.">
 
   <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Buckley Transport">
@@ -115,10 +116,16 @@
       
       function initializeFlutter() {
         console.log('🚀 Initializing Flutter...');
-        _flutter.loader.load({
-          serviceWorkerSettings: {
+        _flutter.loader.loadEntrypoint({
+          serviceWorker: {
             serviceWorkerVersion: serviceWorkerVersion,
-          },
+          }
+        }).then(function(engineInitializer) {
+          return engineInitializer.initializeEngine();
+        }).then(function(appRunner) {
+          return appRunner.runApp();
+        }).catch(function(error) {
+          console.error('Failed to initialize Flutter:', error);
         });
       }
       

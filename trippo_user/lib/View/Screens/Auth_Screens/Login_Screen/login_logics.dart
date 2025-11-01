@@ -31,6 +31,14 @@ class LoginLogics {
 
       ref.read(loginIsLoadingProvider.notifier).update((state) => false);
 
+      // Invalidate all user-related providers to force fresh data
+      ref.invalidate(currentUserProvider);
+      ref.invalidate(currentUserStreamProvider);
+      ref.invalidate(isDriverProvider);
+      ref.invalidate(isRegularUserProvider);
+      
+      debugPrint('🔄 Providers invalidated for fresh login');
+
       if (context.mounted) {
         // Navigation is handled by Go Router redirect logic
         // based on user role, so we just go to splash

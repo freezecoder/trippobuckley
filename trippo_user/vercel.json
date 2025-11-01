@@ -1,41 +1,5 @@
 {
   "version": 2,
-  "name": "btrips-unified",
-  "buildCommand": "flutter build web --release",
-  "outputDirectory": "build/web",
-  "framework": null,
-  "installCommand": "if [ ! -d \"$HOME/.flutter\" ]; then git clone https://github.com/flutter/flutter.git -b stable --depth 1 $HOME/.flutter; fi && export PATH=\"$PATH:$HOME/.flutter/bin\" && flutter doctor && flutter pub get",
-  "devCommand": "flutter run -d web-server --web-port=3000",
-  "routes": [
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/icons/(.*)",
-      "dest": "/icons/$1"
-    },
-    {
-      "src": "/favicon.png",
-      "dest": "/favicon.png"
-    },
-    {
-      "src": "/manifest.json",
-      "dest": "/manifest.json"
-    },
-    {
-      "src": "/(.*\\.js)",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*\\.json)",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -75,4 +39,3 @@
     }
   ]
 }
-
