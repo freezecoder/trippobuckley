@@ -17,6 +17,7 @@ The script will:
 2. ✅ Get dependencies
 3. ✅ Build release APK
 4. ✅ Show APK location and installation instructions
+5. ✅ Optionally upload to AWS S3 for easy distribution
 
 ### Manual Build
 
@@ -42,16 +43,58 @@ build/app/outputs/flutter-apk/app-release.apk
 
 **File Size:** ~57-60 MB
 
+## AWS S3 Distribution (Optional)
+
+The build script includes optional AWS S3 upload for easy distribution.
+
+### Setup AWS CLI
+
+If not already installed:
+
+```bash
+# macOS
+brew install awscli
+
+# Configure AWS credentials
+aws configure
+```
+
+### Upload Process
+
+After building, the script will prompt:
+- "Upload APK to S3? (y/n)"
+- If yes, uploads to: `s3://momentumbjjappmedia/thumbnails/btrips.pre.apk`
+- Returns HTTPS link: `https://momentumbjjappmedia.s3.amazonaws.com/thumbnails/btrips.pre.apk`
+- Link is automatically copied to clipboard (macOS)
+
+### Manual S3 Upload
+
+```bash
+aws s3 cp build/app/outputs/flutter-apk/app-release.apk \
+  s3://momentumbjjappmedia/thumbnails/btrips.pre.apk \
+  --acl public-read
+```
+
+**Share the link**: Send the HTTPS URL to anyone who needs to install the app. They can download and install directly from their Android browser.
+
 ## Installation Methods
 
-### Method 1: ADB (Recommended for Development)
+### Method 1: HTTPS Download (Easiest for Distribution)
+
+If uploaded to S3:
+1. Share the HTTPS link with testers
+2. Open link on Android device
+3. Download and install APK
+4. Enable "Install from Unknown Sources" if prompted
+
+### Method 2: ADB (Recommended for Development)
 
 ```bash
 # Connect device via USB and enable USB debugging
 adb install build/app/outputs/flutter-apk/app-release.apk
 ```
 
-### Method 2: Manual Transfer
+### Method 3: Manual Transfer
 
 1. Copy `app-release.apk` to your Android device
 2. On your device, go to **Settings → Security**
@@ -59,7 +102,7 @@ adb install build/app/outputs/flutter-apk/app-release.apk
 4. Open the APK file using a File Manager
 5. Tap **Install**
 
-### Method 3: Cloud Transfer
+### Method 4: Cloud Transfer
 
 1. Upload APK to Google Drive, Dropbox, or similar
 2. Download on your Android device

@@ -101,9 +101,59 @@ if [ $? -eq 0 ]; then
         echo ""
         echo -e "${GREEN}✅ Build complete!${NC}"
         
+        # Step 5: Optional AWS S3 Upload
+        echo ""
+        echo -e "${BLUE}════════════════════════════════════════════════════════════${NC}"
+        echo -e "${YELLOW}📤 AWS S3 Upload (Optional)${NC}"
+        echo ""
+        
+        # Check if AWS CLI is installed
+        if command -v aws &> /dev/null; then
+            echo -e "${GREEN}✓ AWS CLI found${NC}"
+            echo ""
+            read -p "Upload APK to S3? (y/n) " -n 1 -r
+            echo
+            
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                S3_BUCKET="s3://momentumbjjappmedia/thumbnails/btrips.pre.apk"
+                HTTPS_URL="https://momentumbjjappmedia.s3.amazonaws.com/thumbnails/btrips.pre.apk"
+                
+                echo ""
+                echo -e "${YELLOW}Uploading to S3...${NC}"
+                
+                if aws s3 cp "$APK_PATH" "$S3_BUCKET" --acl public-read; then
+                    echo ""
+                    echo -e "${GREEN}✓ Upload successful!${NC}"
+                    echo ""
+                    echo -e "${GREEN}📥 Direct Download Link:${NC}"
+                    echo -e "${BLUE}$HTTPS_URL${NC}"
+                    echo ""
+                    echo "You can share this link to install the app on any Android device."
+                    
+                    # Copy to clipboard on macOS
+                    if [[ "$OSTYPE" == "darwin"* ]]; then
+                        echo "$HTTPS_URL" | pbcopy
+                        echo -e "${GREEN}✓ Link copied to clipboard!${NC}"
+                    fi
+                else
+                    echo ""
+                    echo -e "${RED}✗ Upload failed${NC}"
+                    echo "Check your AWS credentials and permissions."
+                fi
+            else
+                echo "Skipping S3 upload."
+            fi
+        else
+            echo -e "${YELLOW}⚠️  AWS CLI not found${NC}"
+            echo "Install AWS CLI to enable S3 upload:"
+            echo "  brew install awscli  (macOS)"
+            echo "  https://aws.amazon.com/cli/"
+        fi
+        
         # Open folder (macOS)
         if [[ "$OSTYPE" == "darwin"* ]]; then
             echo ""
+            echo -e "${BLUE}════════════════════════════════════════════════════════════${NC}"
             read -p "Open APK folder in Finder? (y/n) " -n 1 -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
