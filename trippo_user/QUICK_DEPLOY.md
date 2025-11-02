@@ -67,7 +67,7 @@ Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials):
    - ✅ Geocoding API
 6. Save
 
-### 2. Add Vercel Domain to Firebase
+### 2. Add Vercel Domain cdto Firebase
 Go to [Firebase Console](https://console.firebase.google.com/):
 1. Select project: `trippo-42089`
 2. Go to Authentication → Settings → Authorized domains
