@@ -1,0 +1,15 @@
+
+
+firestore_credentials.json
+
+# Firebase credentials - keep local only
+**/GoogleService-Info.plist
+**/firebase_options.dart
+GoogleService-Info.plist
+firebase_options.dart
+google-services.json
+
+
+.env
+.env.local
+
