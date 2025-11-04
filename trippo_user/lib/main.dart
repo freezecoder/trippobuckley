@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'firebase_options.dart';
 import 'routes/app_router.dart';
 import 'View/Themes/app_theme.dart';
+import 'core/constants/stripe_constants.dart';
 
 // Background message handler must be a top-level function
 // Only used on mobile platforms (iOS and Android)
@@ -19,6 +21,10 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  // Initialize Stripe BEFORE app starts (REQUIRED for flutter_stripe_web!)
+  Stripe.publishableKey = StripeConstants.activePublishableKey;
+  debugPrint('✅ Stripe initialized with publishable key');
   
   // Register background message handler only on mobile platforms
   // Web platform requires additional service worker setup which is not configured

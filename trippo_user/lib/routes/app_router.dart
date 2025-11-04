@@ -9,6 +9,7 @@ import '../features/auth/presentation/screens/role_selection_screen.dart';
 import '../features/driver/config/presentation/screens/driver_config_screen.dart';
 import '../features/driver/navigation/driver_main_navigation.dart';
 import '../features/shared/presentation/screens/rating_screen.dart';
+import '../features/admin/presentation/screens/admin_main_screen.dart';
 
 // Import existing screens (will be migrated later)
 import '../View/Screens/Auth_Screens/Login_Screen/login_screen.dart';
@@ -72,6 +73,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: RouteNames.driverConfig,
         name: RouteNames.driverConfig,
         builder: (context, state) => const DriverConfigScreen(),
+      ),
+      
+      // Admin Route (protected)
+      GoRoute(
+        path: '/admin',
+        name: 'admin',
+        builder: (context, state) => const AdminMainScreen(),
       ),
       
       // Shared Routes
@@ -176,6 +184,12 @@ Future<String?> _handleRedirect(
         final authRepo = container.read(authRepositoryProvider);
         await authRepo.logout();
         return RouteNames.login;
+      }
+      
+      // Admin users redirect to admin dashboard
+      if (user.isAdmin) {
+        debugPrint('🔀 Admin user, redirecting to admin dashboard');
+        return '/admin';
       }
       
       // If driver without config, go to driver config

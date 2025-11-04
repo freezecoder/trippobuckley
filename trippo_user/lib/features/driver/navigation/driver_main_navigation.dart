@@ -57,7 +57,7 @@ class DriverMainNavigation extends ConsumerWidget {
           ref.read(driverNavigationStateProvider.notifier).update((state) => selection);
         },
         backgroundColor: Colors.black,
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         selectedIndex: currentIndex,
       ),
     );

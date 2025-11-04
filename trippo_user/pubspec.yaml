@@ -46,6 +46,7 @@ dependencies:
   firebase_core: '>=2.15.0 <2.16.0'
   firebase_auth: '>=4.7.1 <4.8.0'
   cloud_firestore: '>=4.8.3 <4.9.0'
+  cloud_functions: '>=4.3.0 <4.4.0'
   firebase_messaging: '>=14.6.7 <14.7.0'
   firebase_storage: '>=11.2.6 <11.3.0'
   flutter_local_notifications: ^17.0.0
@@ -61,13 +62,29 @@ dependencies:
   # Networking
   dio: ^5.3.2
   
+  # Utils
+  uuid: ^4.5.1
+  
+  # Google Places Search - using webservice library
+  google_maps_webservice: ^0.0.20-nullsafety.5
+  
   # UI & Animation
   elegant_notification: ^1.10.1
   lottie: ^2.6.0
   url_launcher: ^6.2.2
   
+  # Charts & Analytics
+  fl_chart: ^0.66.0
+  
   # Image Handling
   image_picker: ^1.0.4
+  
+  # Stripe Payment Processing
+  flutter_stripe: ^11.0.0
+  flutter_stripe_web: ^6.0.0  # Required for web support!
+  
+  # HTTP client for Stripe backend calls (compatible with flutter_polyline_points)
+  http: ^0.13.6
 
 dev_dependencies:
   flutter_test:

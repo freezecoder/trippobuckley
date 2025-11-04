@@ -63,6 +63,9 @@ class UserModel {
 
   /// Check if user is a regular user
   bool get isRegularUser => userType == UserType.user;
+  
+  /// Check if user is an admin
+  bool get isAdmin => userType == UserType.admin;
 
   /// Copy with method for immutability
   UserModel copyWith({

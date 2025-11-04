@@ -10,6 +10,13 @@ class GooglePlacesWeb {
     throw UnsupportedError('Google Places Web is not supported on this platform');
   }
 
+  static Future<List<Map<String, dynamic>>> getPlacePredictions(
+    String input,
+    String apiKey,
+  ) async {
+    throw UnsupportedError('Google Places Web is not supported on this platform');
+  }
+
   static Future<Map<String, dynamic>?> getPlaceDetails(String placeId) async {
     throw UnsupportedError('Google Places Web is not supported on this platform');
   }

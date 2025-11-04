@@ -62,9 +62,19 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       
       // Only drivers can create/update their own driver document
-      allow create, update: if isAuthenticated() && 
-                              isOwner(userId) && 
-                              isDriver();
+      allow create: if isAuthenticated() && 
+                      isOwner(userId) && 
+                      isDriver();
+      
+      // Drivers can update their own document (all fields)
+      // Users can update ONLY the rating field (after rating a driver)
+      allow update: if isAuthenticated() && (
+        // Driver updating their own document
+        (isOwner(userId) && isDriver()) ||
+        // User updating driver's rating after a ride (ONLY rating field)
+        (isRegularUser() && 
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating']))
+      );
       
       // Prevent deletion
       allow delete: if false;
@@ -107,14 +117,15 @@ service cloud.firestore {
       // Users can update their own requests
       // Drivers can accept pending rides (driverId is null)
       // Drivers can update/cancel rides assigned to them
+      // Both can add ratings to completed rides
       allow update: if isAuthenticated() && (
-        // User updating their own ride (including cancellation)
+        // User updating their own ride (including cancellation and rating)
         (resource.data.userId == request.auth.uid) ||
         // Driver accepting a pending ride (driverId is null → being set)
         (isDriver() && resource.data.driverId == null && 
          request.resource.data.driverId == request.auth.uid &&
          resource.data.status == 'pending') ||
-        // Driver updating their assigned ride (including cancellation)
+        // Driver updating their assigned ride (including cancellation and rating)
         (resource.data.driverId == request.auth.uid && isDriver())
       );
       
@@ -141,9 +152,19 @@ service cloud.firestore {
         (request.resource.data.userId == request.auth.uid && isRegularUser())
       );
       
+      // Users can update to add their rating and feedback
+      // Drivers can update to add their rating and feedback
       allow update: if isAuthenticated() && (
-        (resource.data.userId == request.auth.uid && isRegularUser()) ||
-        (resource.data.driverId == request.auth.uid && isDriver())
+        // User rating driver (can update userRating and/or userFeedback only)
+        (resource.data.userId == request.auth.uid && 
+         isRegularUser() &&
+         (request.resource.data.diff(resource.data).affectedKeys().hasAny(['userRating', 'userFeedback']) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['userRating', 'userFeedback']))) ||
+        // Driver rating user (can update driverRating and/or driverFeedback only)
+        (resource.data.driverId == request.auth.uid && 
+         isDriver() &&
+         (request.resource.data.diff(resource.data).affectedKeys().hasAny(['driverRating', 'driverFeedback']) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['driverRating', 'driverFeedback'])))
       );
       
       // Prevent deletion
@@ -210,8 +231,91 @@ service cloud.firestore {
     }
     
     
+    // Stripe Collections (Payment Processing)
+    // ============================================
+    
+    // Stripe Customers Collection
+    // Stores Stripe customer IDs and payment methods
+    match /stripeCustomers/{userId} {
+      // Users can only read their own Stripe customer data
+      allow read: if isAuthenticated() && isOwner(userId);
+      
+      // Users can create their own customer record (during first payment setup)
+      allow create: if isAuthenticated() && 
+                      isOwner(userId) &&
+                      request.resource.data.userId == userId;
+      
+      // Users can update their own payment methods and billing address
+      // But cannot change stripeCustomerId (set once, immutable)
+      allow update: if isAuthenticated() && 
+                      isOwner(userId) &&
+                      request.resource.data.stripeCustomerId == resource.data.stripeCustomerId &&
+                      request.resource.data.userId == userId;
+      
+      // Users cannot delete their Stripe customer record
+      // (Deactivation should be handled by setting isActive = false)
+      allow delete: if false;
+      
+      // Admin access (uncomment when admin role is implemented)
+      // allow read: if isAuthenticated() && (isOwner(userId) || getUserType() == 'admin');
+      // allow write: if isAuthenticated() && (isOwner(userId) || getUserType() == 'admin');
+    }
+    
+    // Stripe Payment Intents Collection
+    // Stores payment intent records for each transaction
+    match /stripePaymentIntents/{intentId} {
+      // Users can read their own payment intents
+      allow read: if isAuthenticated() && 
+                    resource.data.userId == request.auth.uid;
+      
+      // Payment intents are created by Cloud Functions only
+      allow create: if false;
+      
+      // Payment intents can be updated by Cloud Functions only (status changes)
+      allow update: if false;
+      
+      // Payment intents are immutable (audit trail)
+      allow delete: if false;
+    }
+    
+    // Stripe Transactions Collection
+    // Stores completed transaction records (ride payments, refunds, etc.)
+    match /stripeTransactions/{transactionId} {
+      // Users can read their own transactions (as user or driver)
+      allow read: if isAuthenticated() && 
+                    (resource.data.userId == request.auth.uid ||
+                     resource.data.driverId == request.auth.uid);
+      
+      // Transactions are created by Cloud Functions only
+      allow create: if false;
+      
+      // Transactions are immutable (audit trail)
+      allow update, delete: if false;
+    }
+    
+    
     // Legacy Collections (Backward Compatibility)
     // ============================================
+    
+    // Favorite Places Collection
+    // ============================================
+    match /favoritePlaces/{favoriteId} {
+      // Users can only read their own favorites
+      allow read: if isAuthenticated() && 
+                   resource.data.userId == request.auth.uid;
+      
+      // Users can create favorites for themselves
+      allow create: if isAuthenticated() && 
+                    request.resource.data.userId == request.auth.uid;
+      
+      // Users can update their own favorites (nickname, category, useCount)
+      allow update: if isAuthenticated() && 
+                    resource.data.userId == request.auth.uid;
+      
+      // Users can delete their own favorites
+      allow delete: if isAuthenticated() && 
+                    resource.data.userId == request.auth.uid;
+    }
     
     // Old driver collection format - still allow reads
     match /Drivers/{driverEmail} {

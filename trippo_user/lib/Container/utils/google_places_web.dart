@@ -58,20 +58,32 @@ class GooglePlacesWeb {
   /// Wait for Google Maps API to be loaded with all required libraries
   static Future<void> _waitForGoogleMaps() async {
     if (_isGoogleMapsLoaded()) {
+      debugPrint('✅ Google Maps API already loaded');
       return;
     }
 
-    // Wait up to 5 seconds for Google Maps to load (reduced wait time)
-    for (int i = 0; i < 50; i++) {
+    debugPrint('⏳ Waiting for Google Maps API to load...');
+    
+    // Wait up to 15 seconds for Google Maps to load
+    for (int i = 0; i < 150; i++) {
       await Future.delayed(const Duration(milliseconds: 100));
       if (_isGoogleMapsLoaded()) {
+        debugPrint('✅ Google Maps API loaded after ${(i + 1) * 100}ms');
         return;
+      }
+      
+      // Log progress every 2 seconds
+      if (i > 0 && (i + 1) % 20 == 0) {
+        debugPrint('⏳ Still waiting... ${(i + 1) * 100}ms elapsed');
       }
     }
 
     // Final check - throw exception if still not loaded
     if (!_isGoogleMapsLoaded()) {
-      throw Exception('Google Maps API not loaded. Make sure the script is loaded in index.html with libraries=places,geometry,drawing');
+      debugPrint('❌ Google Maps API failed to load after 15 seconds');
+      debugPrint('💡 Check that web/index.html includes:');
+      debugPrint('   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&libraries=places,geometry,drawing&callback=googleMapsLoaded"></script>');
+      throw Exception('Google Maps API not loaded after 15 seconds. Make sure the script is loaded in index.html with libraries=places,geometry,drawing and a callback function');
     }
   }
 

@@ -47,6 +47,12 @@ final isRegularUserProvider = FutureProvider<bool>((ref) async {
   return user?.isRegularUser ?? false;
 });
 
+/// Provider to check if current user is an admin
+final isAdminProvider = FutureProvider<bool>((ref) async {
+  final user = await ref.watch(currentUserProvider.future);
+  return user?.isAdmin ?? false;
+});
+
 /// Provider for checking if user is authenticated
 final isAuthenticatedProvider = Provider<bool>((ref) {
   final authUser = ref.watch(firebaseAuthUserProvider).value;

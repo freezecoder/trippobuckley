@@ -28,6 +28,14 @@ class RideRequestModel {
   final String? userFeedback;
   final String? driverFeedback;
   final List<String>? declinedBy; // List of driver IDs who declined this ride
+  
+  // Payment fields
+  final String paymentMethod; // 'card' or 'cash'
+  final String? paymentMethodId; // Stripe payment method ID (null for cash)
+  final String? paymentMethodLast4; // Last 4 digits of card (null for cash)
+  final String? paymentMethodBrand; // Card brand like 'visa', 'mastercard' (null for cash)
+  final String? stripePaymentIntentId; // Stripe payment intent ID (null for cash or before payment)
+  final String? paymentStatus; // 'pending', 'completed', 'failed', 'cancelled'
 
   RideRequestModel({
     required this.id,
@@ -55,6 +63,12 @@ class RideRequestModel {
     this.userFeedback,
     this.driverFeedback,
     this.declinedBy,
+    this.paymentMethod = 'cash', // Default to cash
+    this.paymentMethodId,
+    this.paymentMethodLast4,
+    this.paymentMethodBrand,
+    this.stripePaymentIntentId,
+    this.paymentStatus = 'pending',
   });
 
   /// Create RideRequestModel from Firestore document
@@ -85,6 +99,12 @@ class RideRequestModel {
       userFeedback: data['userFeedback'] as String?,
       driverFeedback: data['driverFeedback'] as String?,
       declinedBy: (data['declinedBy'] as List<dynamic>?)?.cast<String>(),
+      paymentMethod: data['paymentMethod'] ?? 'cash',
+      paymentMethodId: data['paymentMethodId'] as String?,
+      paymentMethodLast4: data['paymentMethodLast4'] as String?,
+      paymentMethodBrand: data['paymentMethodBrand'] as String?,
+      stripePaymentIntentId: data['stripePaymentIntentId'] as String?,
+      paymentStatus: data['paymentStatus'] ?? 'pending',
     );
   }
 
@@ -115,6 +135,12 @@ class RideRequestModel {
       'userFeedback': userFeedback,
       'driverFeedback': driverFeedback,
       'declinedBy': declinedBy,
+      'paymentMethod': paymentMethod,
+      'paymentMethodId': paymentMethodId,
+      'paymentMethodLast4': paymentMethodLast4,
+      'paymentMethodBrand': paymentMethodBrand,
+      'stripePaymentIntentId': stripePaymentIntentId,
+      'paymentStatus': paymentStatus,
     };
   }
 

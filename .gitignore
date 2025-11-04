@@ -8,7 +8,17 @@ firestore_credentials.json
 GoogleService-Info.plist
 firebase_options.dart
 google-services.json
+**/google-services.json
 
+# API Keys and Credentials
+**/keys.dart
+**/stripe_constants.dart
+
+# Driver app credentials
+trippo_driver/android/app/google-services.json
+trippo_driver/lib/Container/utils/keys.dart
+trippo_user/android/app/google-services.json
+trippo_user/android/google-services.json
 
 .env
 .env.local

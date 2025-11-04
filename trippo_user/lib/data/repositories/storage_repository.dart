@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 /// Repository for Firebase Storage operations
 class StorageRepository {
@@ -25,6 +25,11 @@ class StorageRepository {
   /// Pick image from camera
   Future<XFile?> pickImageFromCamera() async {
     try {
+      // Camera is not available on web
+      if (kIsWeb) {
+        throw Exception('Camera is not available on web. Please use gallery.');
+      }
+      
       final XFile? image = await _imagePicker.pickImage(
         source: ImageSource.camera,
         maxWidth: 1024,
@@ -38,6 +43,7 @@ class StorageRepository {
   }
 
   /// Upload profile picture to Firebase Storage
+  /// Works on both mobile and web platforms
   Future<String> uploadProfilePicture({
     required String userId,
     required XFile imageFile,
@@ -60,7 +66,10 @@ class StorageRepository {
         },
       );
 
-      final uploadTask = await storageRef.putFile(File(imageFile.path), metadata);
+      // Use putData for all platforms (works everywhere)
+      // XFile.readAsBytes() works on both web and mobile
+      final bytes = await imageFile.readAsBytes();
+      final uploadTask = await storageRef.putData(bytes, metadata);
 
       // Get download URL
       final downloadUrl = await uploadTask.ref.getDownloadURL();
@@ -95,6 +104,7 @@ class StorageRepository {
   }
 
   /// Upload vehicle image (optional feature for future)
+  /// Works on both mobile and web platforms
   Future<String> uploadVehicleImage({
     required String driverId,
     required XFile imageFile,
@@ -113,7 +123,11 @@ class StorageRepository {
         },
       );
       
-      final uploadTask = await storageRef.putFile(File(imageFile.path), metadata);
+      // Use putData for all platforms (works everywhere)
+      // XFile.readAsBytes() works on both web and mobile
+      final bytes = await imageFile.readAsBytes();
+      final uploadTask = await storageRef.putData(bytes, metadata);
+      
       final downloadUrl = await uploadTask.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {

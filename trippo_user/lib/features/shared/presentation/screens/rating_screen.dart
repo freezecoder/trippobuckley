@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/route_constants.dart';
 import '../../../../data/models/ride_request_model.dart';
 import '../../../../data/providers/auth_providers.dart';
 import '../../../../data/providers/ride_providers.dart';
@@ -141,12 +140,8 @@ class _RatingScreenState extends ConsumerState<RatingScreen> {
           ),
         );
 
-        // Navigate back to main screen
-        if (widget.isDriver) {
-          context.goNamed(RouteNames.driverMain);
-        } else {
-          context.goNamed(RouteNames.userMain);
-        }
+        // Navigate back to home (unified main screen)
+        context.goNamed('home');
       }
     } catch (e) {
       ref.read(ratingLoadingProvider.notifier).state = false;
@@ -161,11 +156,8 @@ class _RatingScreenState extends ConsumerState<RatingScreen> {
 
   /// Skip rating
   void _skipRating() {
-    if (widget.isDriver) {
-      context.goNamed(RouteNames.driverMain);
-    } else {
-      context.goNamed(RouteNames.userMain);
-    }
+    // Navigate back to home (unified main screen)
+    context.goNamed('home');
   }
 
   @override

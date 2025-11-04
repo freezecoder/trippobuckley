@@ -60,6 +60,11 @@ class RideRepository {
     required double distance,
     required int duration,
     Map<String, dynamic>? route,
+    // Payment fields
+    required String paymentMethod, // 'card' or 'cash'
+    String? paymentMethodId,
+    String? paymentMethodLast4,
+    String? paymentMethodBrand,
   }) async {
     try {
       final rideData = {
@@ -83,6 +88,13 @@ class RideRepository {
         FirebaseConstants.rideDistance: distance,
         FirebaseConstants.rideDuration: duration,
         FirebaseConstants.rideRoute: route,
+        // Payment fields
+        'paymentMethod': paymentMethod,
+        'paymentMethodId': paymentMethodId,
+        'paymentMethodLast4': paymentMethodLast4,
+        'paymentMethodBrand': paymentMethodBrand,
+        'paymentStatus': 'pending',
+        'stripePaymentIntentId': null, // Will be set when payment is processed
       };
 
       final docRef = await _firestore
@@ -96,8 +108,20 @@ class RideRepository {
   }
 
   /// Get ride request by ID
+  /// Checks both rideHistory and rideRequests collections
   Future<RideRequestModel?> getRideRequest(String rideId) async {
     try {
+      // First check ride history (for completed rides)
+      final historyDoc = await _firestore
+          .collection(FirebaseConstants.rideHistoryCollection)
+          .doc(rideId)
+          .get();
+
+      if (historyDoc.exists) {
+        return RideRequestModel.fromFirestore(historyDoc.data()!, rideId);
+      }
+
+      // Then check active ride requests
       final doc = await _firestore
           .collection(FirebaseConstants.rideRequestsCollection)
           .doc(rideId)
@@ -417,10 +441,46 @@ class RideRepository {
         updates[FirebaseConstants.rideUserFeedback] = feedback;
       }
 
-      await _firestore
+      // Try to update in ride history first
+      final historyDoc = await _firestore
           .collection(FirebaseConstants.rideHistoryCollection)
           .doc(rideId)
-          .update(updates);
+          .get();
+
+      if (historyDoc.exists) {
+        // Update in history collection
+        await _firestore
+            .collection(FirebaseConstants.rideHistoryCollection)
+            .doc(rideId)
+            .update(updates);
+      } else {
+        // If not in history, check if it's in active requests
+        final requestDoc = await _firestore
+            .collection(FirebaseConstants.rideRequestsCollection)
+            .doc(rideId)
+            .get();
+
+        if (requestDoc.exists) {
+          // Update in requests collection and also copy to history
+          await _firestore
+              .collection(FirebaseConstants.rideRequestsCollection)
+              .doc(rideId)
+              .update(updates);
+          
+          // Move to history if completed
+          final rideData = requestDoc.data()!;
+          if (rideData[FirebaseConstants.rideStatus] == RideStatus.completed.toFirestore()) {
+            await _moveToRideHistory(rideId);
+            // Update the history document with rating
+            await _firestore
+                .collection(FirebaseConstants.rideHistoryCollection)
+                .doc(rideId)
+                .update(updates);
+          }
+        } else {
+          throw Exception('Ride not found in any collection');
+        }
+      }
     } catch (e) {
       throw Exception('Failed to add user rating: $e');
     }
@@ -441,10 +501,46 @@ class RideRepository {
         updates[FirebaseConstants.rideDriverFeedback] = feedback;
       }
 
-      await _firestore
+      // Try to update in ride history first
+      final historyDoc = await _firestore
           .collection(FirebaseConstants.rideHistoryCollection)
           .doc(rideId)
-          .update(updates);
+          .get();
+
+      if (historyDoc.exists) {
+        // Update in history collection
+        await _firestore
+            .collection(FirebaseConstants.rideHistoryCollection)
+            .doc(rideId)
+            .update(updates);
+      } else {
+        // If not in history, check if it's in active requests
+        final requestDoc = await _firestore
+            .collection(FirebaseConstants.rideRequestsCollection)
+            .doc(rideId)
+            .get();
+
+        if (requestDoc.exists) {
+          // Update in requests collection and also copy to history
+          await _firestore
+              .collection(FirebaseConstants.rideRequestsCollection)
+              .doc(rideId)
+              .update(updates);
+          
+          // Move to history if completed
+          final rideData = requestDoc.data()!;
+          if (rideData[FirebaseConstants.rideStatus] == RideStatus.completed.toFirestore()) {
+            await _moveToRideHistory(rideId);
+            // Update the history document with rating
+            await _firestore
+                .collection(FirebaseConstants.rideHistoryCollection)
+                .doc(rideId)
+                .update(updates);
+          }
+        } else {
+          throw Exception('Ride not found in any collection');
+        }
+      }
     } catch (e) {
       throw Exception('Failed to add driver rating: $e');
     }

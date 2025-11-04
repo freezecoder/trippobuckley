@@ -221,6 +221,12 @@ class AuthRepository {
     final user = await getCurrentUser();
     return user?.isRegularUser ?? false;
   }
+  
+  /// Check if user is admin
+  Future<bool> isAdmin() async {
+    final user = await getCurrentUser();
+    return user?.isAdmin ?? false;
+  }
 
   /// Logout
   Future<void> logout() async {

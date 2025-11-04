@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../models/user_model.dart';
@@ -47,21 +48,32 @@ class UserRepository {
 
       if (name != null) {
         updates[FirebaseConstants.userName] = name;
+        debugPrint('📝 Updating name: $name');
       }
       if (phoneNumber != null) {
         updates[FirebaseConstants.userPhoneNumber] = phoneNumber;
+        debugPrint('📞 Updating phone: $phoneNumber');
       }
       if (profileImageUrl != null) {
         updates[FirebaseConstants.userProfileImageUrl] = profileImageUrl;
+        debugPrint('🖼️ Updating profile image');
       }
 
       if (updates.isNotEmpty) {
+        debugPrint('💾 Writing to Firestore users/$userId');
+        debugPrint('   Updates: $updates');
+        
         await _firestore
             .collection(FirebaseConstants.usersCollection)
             .doc(userId)
             .update(updates);
+            
+        debugPrint('✅ Firestore update completed successfully');
+      } else {
+        debugPrint('⚠️ No updates to save');
       }
     } catch (e) {
+      debugPrint('❌ Error in updateUserProfile: $e');
       throw Exception('Failed to update user profile: $e');
     }
   }

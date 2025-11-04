@@ -51,4 +51,134 @@ class LoginLogics {
       }
     }
   }
+
+  /// Show forgot password dialog
+  void showForgotPasswordDialog(BuildContext context, WidgetRef ref) {
+    final emailController = TextEditingController();
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          backgroundColor: Colors.grey[900],
+          title: Text(
+            'Reset Password',
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              fontFamily: "bold",
+              fontSize: 18,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Enter your email address and we\'ll send you a link to reset your password.',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  fontSize: 14,
+                  color: Colors.white70,
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: emailController,
+                cursorColor: Colors.red,
+                keyboardType: TextInputType.emailAddress,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 14),
+                decoration: InputDecoration(
+                  hintText: 'Enter your email',
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontSize: 14, color: Colors.white54),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: Colors.red, width: 1),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: Colors.red, width: 1),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(
+                'Cancel',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: Colors.white70,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final email = emailController.text.trim();
+                
+                if (email.isEmpty) {
+                  if (dialogContext.mounted) {
+                    ErrorNotification().showError(
+                      dialogContext,
+                      "Please enter your email",
+                    );
+                  }
+                  return;
+                }
+
+                if (!email.contains('@')) {
+                  if (dialogContext.mounted) {
+                    ErrorNotification().showError(
+                      dialogContext,
+                      "Please enter a valid email",
+                    );
+                  }
+                  return;
+                }
+
+                try {
+                  final authRepo = ref.read(authRepositoryProvider);
+                  await authRepo.sendPasswordResetEmail(email);
+                  
+                  if (dialogContext.mounted) {
+                    Navigator.of(dialogContext).pop();
+                    
+                    // Show success message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Password reset email sent! Check your inbox.',
+                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                        backgroundColor: Colors.green[700],
+                        duration: const Duration(seconds: 4),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (dialogContext.mounted) {
+                    ErrorNotification().showError(
+                      dialogContext,
+                      "Failed to send reset email: ${e.toString()}",
+                    );
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: Text(
+                'Send Reset Link',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

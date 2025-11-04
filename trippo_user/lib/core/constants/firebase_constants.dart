@@ -7,6 +7,11 @@ class FirebaseConstants {
   static const String rideRequestsCollection = 'rideRequests';
   static const String rideHistoryCollection = 'rideHistory';
   static const String presetLocationsCollection = 'presetLocations';
+  
+  // Stripe Collections
+  static const String stripeCustomersCollection = 'stripeCustomers';
+  static const String stripePaymentIntentsCollection = 'stripePaymentIntents';
+  static const String stripeTransactionsCollection = 'stripeTransactions';
 
   // User Fields
   static const String userEmail = 'email';
@@ -89,6 +94,19 @@ class FirebaseConstants {
   static const String presetLocationPlaceId = 'placeId';
   static const String presetLocationLatitude = 'latitude';
   static const String presetLocationLongitude = 'longitude';
+  
+  // Stripe Customer Fields
+  static const String stripeCustomerId = 'stripeCustomerId';
+  static const String stripeBillingAddress = 'billingAddress';
+  static const String stripeDefaultPaymentMethod = 'defaultPaymentMethodId';
+  
+  // Payment Method Fields
+  static const String paymentMethodId = 'id';
+  static const String paymentMethodType = 'type';
+  static const String paymentMethodLast4 = 'last4';
+  static const String paymentMethodBrand = 'brand';
+  static const String paymentMethodExpiry = 'expiryMonth';
+  static const String paymentMethodStripeId = 'stripePaymentMethodId';
   static const String presetLocationCategory = 'category';
   static const String presetLocationIsActive = 'isActive';
   static const String presetLocationOrder = 'order';

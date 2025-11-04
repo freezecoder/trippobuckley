@@ -170,74 +170,106 @@ class HomeScreenLogics {
       }
 
       if (context.mounted) {
-        /// Making [Markers] for [pickUp] and [dropOff] Places
-        Marker pickUpMarker = Marker(
-            markerId: const MarkerId("pickUpId"),
-            infoWindow: InfoWindow(
-              title: ref.watch(homeScreenPickUpLocationProvider)!.locationName,
-            ),
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueGreen),
-            position: LatLng(
-                ref.watch(homeScreenPickUpLocationProvider)!.locationLatitude!,
-                ref
-                    .watch(homeScreenPickUpLocationProvider)!
-                    .locationLongitude!));
-        Marker dropOffMarker = Marker(
-            markerId: const MarkerId("dropOffId"),
-            infoWindow: InfoWindow(
-              title: ref.watch(homeScreenDropOffLocationProvider)!.locationName,
-            ),
-            icon:
-                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-            position: LatLng(
-                ref.watch(homeScreenDropOffLocationProvider)!.locationLatitude!,
-                ref
-                    .watch(homeScreenDropOffLocationProvider)!
-                    .locationLongitude!));
-
-        /// Making [Circle] for [pickUp] and [dropOff] Places
-
-        Circle pickUpCircle = Circle(
-            circleId: const CircleId("pickUpCircle"),
-            fillColor: Colors.green,
-            radius: 500,
-            strokeColor: Colors.black,
-            center: LatLng(
-                ref.watch(homeScreenPickUpLocationProvider)!.locationLatitude!,
-                ref
-                    .watch(homeScreenPickUpLocationProvider)!
-                    .locationLongitude!));
-        Circle dropOffCircle = Circle(
-            circleId: const CircleId("dropOffCircle"),
-            fillColor: Colors.red,
-            radius: 500,
-            strokeColor: Colors.black,
-            center: LatLng(
-                ref.watch(homeScreenDropOffLocationProvider)!.locationLatitude!,
-                ref
-                    .watch(homeScreenDropOffLocationProvider)!
-                    .locationLongitude!));
-
-        /// Calling function to draw [Polylines]
-        ref
-            .watch(globalDirectionPolylinesRepoProvider)
-            .setNewDirectionPolylines(ref, context, controller);
-
-        /// Adding [Markers] to [pickUp] and [dropOff] Places
-        ref
-            .watch(homeScreenMainMarkersProvider.notifier)
-            .update((state) => {...state, pickUpMarker, dropOffMarker});
-
-        /// Adding [Circles] to [pickUp] and [dropOff] Places
-        ref
-            .watch(homeScreenMainCirclesProvider.notifier)
-            .update((state) => {...state, pickUpCircle, dropOffCircle});
+        // Recalculate route and fare
+        await refreshRouteAndFare(context, ref, controller);
       }
     } catch (e) {
       if (context.mounted) {
         ErrorNotification().showError(context, "An Error Occurred $e");
       }
+    }
+  }
+
+  /// Refresh route, fare, markers and circles when dropoff location changes
+  /// This is called whenever a new dropoff location is selected (search, presets, etc.)
+  Future<void> refreshRouteAndFare(BuildContext context, WidgetRef ref,
+      GoogleMapController controller) async {
+    try {
+      // Check both locations are set
+      if (ref.read(homeScreenPickUpLocationProvider) == null ||
+          ref.read(homeScreenDropOffLocationProvider) == null) {
+        return;
+      }
+
+      if (!context.mounted) return;
+
+      /// Reset previous data
+      ref.read(homeScreenRateProvider.notifier).update((state) => null);
+      ref.read(homeScreenRouteDistanceProvider.notifier).update((state) => null);
+      ref.read(homeScreenSelectedVehicleTypeProvider.notifier).update((state) => null);
+      ref.read(homeScreenMainPolylinesProvider.notifier).update((state) => {});
+
+      /// Making [Markers] for [pickUp] and [dropOff] Places
+      Marker pickUpMarker = Marker(
+          markerId: const MarkerId("pickUpId"),
+          infoWindow: InfoWindow(
+            title: ref.read(homeScreenPickUpLocationProvider)!.locationName,
+          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueGreen),
+          position: LatLng(
+              ref.read(homeScreenPickUpLocationProvider)!.locationLatitude!,
+              ref
+                  .read(homeScreenPickUpLocationProvider)!
+                  .locationLongitude!));
+      Marker dropOffMarker = Marker(
+          markerId: const MarkerId("dropOffId"),
+          infoWindow: InfoWindow(
+            title: ref.read(homeScreenDropOffLocationProvider)!.locationName,
+          ),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          position: LatLng(
+              ref.read(homeScreenDropOffLocationProvider)!.locationLatitude!,
+              ref
+                  .read(homeScreenDropOffLocationProvider)!
+                  .locationLongitude!));
+
+      /// Making [Circle] for [pickUp] and [dropOff] Places
+
+      Circle pickUpCircle = Circle(
+          circleId: const CircleId("pickUpCircle"),
+          fillColor: Colors.green,
+          radius: 500,
+          strokeColor: Colors.black,
+          center: LatLng(
+              ref.read(homeScreenPickUpLocationProvider)!.locationLatitude!,
+              ref
+                  .read(homeScreenPickUpLocationProvider)!
+                  .locationLongitude!));
+      Circle dropOffCircle = Circle(
+          circleId: const CircleId("dropOffCircle"),
+          fillColor: Colors.red,
+          radius: 500,
+          strokeColor: Colors.black,
+          center: LatLng(
+              ref.read(homeScreenDropOffLocationProvider)!.locationLatitude!,
+              ref
+                  .read(homeScreenDropOffLocationProvider)!
+                  .locationLongitude!));
+
+      /// Calling function to draw [Polylines] and calculate fare
+      debugPrint('🔄 Recalculating route and fare for new dropoff location...');
+      ref
+          .read(globalDirectionPolylinesRepoProvider)
+          .setNewDirectionPolylines(ref, context, controller);
+
+      /// Adding [Markers] to [pickUp] and [dropOff] Places
+      ref
+          .read(homeScreenMainMarkersProvider.notifier)
+          .update((state) => {...state, pickUpMarker, dropOffMarker});
+
+      /// Adding [Circles] to [pickUp] and [dropOff] Places
+      ref
+          .read(homeScreenMainCirclesProvider.notifier)
+          .update((state) => {...state, pickUpCircle, dropOffCircle});
+
+      debugPrint('✅ Route and fare recalculated successfully');
+    } catch (e) {
+      if (context.mounted) {
+        ErrorNotification().showError(context, "Error calculating route: $e");
+      }
+      debugPrint('❌ Error in refreshRouteAndFare: $e');
     }
   }
 
@@ -972,9 +1004,10 @@ class HomeScreenLogics {
           ),
         );
 
-        // Draw polylines and markers if pickup location is set
+        // Recalculate route and fare if pickup location is set
         if (ref.read(homeScreenPickUpLocationProvider) != null && context.mounted) {
-          openWhereToScreen(context, ref, controller);
+          debugPrint('🔄 Preset location selected: ${preset.name}');
+          await refreshRouteAndFare(context, ref, controller);
         }
 
         // Switch back to search mode after selection

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stripe Elements Test</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1e1e1e;
+      color: white;
+    }
+    #card-element {
+      background: #2e2e2e;
+      padding: 12px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    button {
+      background: #0066ff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #0052cc;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 12px;
+      background: #2e2e2e;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stripe Elements Test</h1>
+  <p>Testing Stripe Elements integration for BTrips</p>
+  
+  <div>
+    <label>Cardholder Name:</label>
+    <input type="text" id="cardholder-name" value="Test User" style="width: 100%; padding: 8px; background: #2e2e2e; border: 1px solid #444; color: white; border-radius: 4px; margin: 10px 0;">
+  </div>
+  
+  <div>
+    <label>Card Details (Stripe Elements):</label>
+    <div id="card-element"></div>
+  </div>
+  
+  <button onclick="testPaymentMethod()">Test Create Payment Method</button>
+  
+  <div id="result"></div>
+  
+  <script>
+    // Your Stripe publishable key
+    const stripe = new Stripe('pk_test_51SIvJVDjdHHArGB1gce3Dt39aBAZJSdERnMCLeF8VeYMzNNLpGRAW1M4ommB94O75CM65JKLVulbBATONp6ybzgM00tvHvblxc');
+    const elements = stripe.elements();
+    
+    // Create card element
+    const cardElement = elements.create('card', {
+      style: {
+        base: {
+          color: '#ffffff',
+          fontSize: '16px',
+          '::placeholder': {
+            color: '#aab7c4',
+          },
+        },
+        invalid: {
+          color: '#fa755a',
+        },
+      },
+    });
+    
+    // Mount card element
+    cardElement.mount('#card-element');
+    
+    console.log('✅ Stripe Elements mounted');
+    
+    // Test function
+    async function testPaymentMethod() {
+      const resultDiv = document.getElementById('result');
+      const cardholderName = document.getElementById('cardholder-name').value;
+      
+      resultDiv.innerHTML = '<p>Creating payment method...</p>';
+      
+      try {
+        const result = await stripe.createPaymentMethod({
+          type: 'card',
+          card: cardElement,
+          billing_details: {
+            name: cardholderName,
+          },
+        });
+        
+        if (result.error) {
+          resultDiv.innerHTML = '<p style="color: #fa755a;">❌ Error: ' + result.error.message + '</p>';
+        } else {
+          resultDiv.innerHTML = `
+            <p style="color: #00ff00;">✅ Success!</p>
+            <p>Payment Method ID: ${result.paymentMethod.id}</p>
+            <p>Card: ${result.paymentMethod.card.brand} •••• ${result.paymentMethod.card.last4}</p>
+            <p>Expires: ${result.paymentMethod.card.exp_month}/${result.paymentMethod.card.exp_year}</p>
+          `;
+          console.log('✅ Payment method created:', result.paymentMethod);
+        }
+      } catch (error) {
+        resultDiv.innerHTML = '<p style="color: #fa755a;">❌ Exception: ' + error.message + '</p>';
+        console.error('Error:', error);
+      }
+    }
+    
+    // Test that function is accessible
+    console.log('window.testPaymentMethod:', typeof window.testPaymentMethod);
+  </script>
+  
+  <div style="margin-top: 40px; padding: 20px; background: #2e2e2e; border-radius: 4px;">
+    <h3>Test Card Numbers:</h3>
+    <ul>
+      <li>Visa: 4242 4242 4242 4242</li>
+      <li>Mastercard: 5555 5555 5555 4444</li>
+      <li>Amex: 3782 822463 10005</li>
+    </ul>
+    <p><small>Expiry: Any future date | CVC: Any 3 digits (4 for Amex)</small></p>
+  </div>
+  
+  <div style="margin-top: 20px;">
+    <h3>Instructions:</h3>
+    <ol>
+      <li>Enter cardholder name</li>
+      <li>Enter test card in Stripe Elements field above</li>
+      <li>Click "Test Create Payment Method"</li>
+      <li>If this works, the Flutter integration should work too</li>
+    </ol>
+  </div>
+</body>
+</html>
+

@@ -16,6 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +70,41 @@ class _LoginScreenState extends State<LoginScreen> {
                                 emailController, context, false, "Enter Email"),
                             Padding(
                               padding: const EdgeInsets.only(top: 20.0),
-                              child: Components().returnTextField(
-                                  passwordController,
-                                  context,
-                                  true,
-                                  "Enter Password"),
+                              child: Components().returnPasswordField(
+                                controller: passwordController,
+                                context: context,
+                                hintText: "Enter Password",
+                                isPasswordVisible: isPasswordVisible,
+                                onToggleVisibility: () {
+                                  setState(() {
+                                    isPasswordVisible = !isPasswordVisible;
+                                  });
+                                },
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Consumer(builder: (context, ref, child) {
+                                return TextButton(
+                                  onPressed: () {
+                                    LoginLogics().showForgotPasswordDialog(context, ref);
+                                  },
+                                  child: Text(
+                                    "Forgot Password?",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                          fontFamily: "medium",
+                                          fontSize: 12,
+                                          color: Colors.red[300],
+                                        ),
+                                  ),
+                                );
+                              }),
                             ),
                             Padding(
-                                padding: const EdgeInsets.only(top: 20.0),
+                                padding: const EdgeInsets.only(top: 10.0),
                                 child: Consumer(builder: (context, ref, child) {
                                   return InkWell(
                                       onTap: ref.watch(loginIsLoadingProvider)

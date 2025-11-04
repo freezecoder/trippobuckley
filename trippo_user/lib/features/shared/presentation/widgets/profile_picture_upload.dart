@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,6 +26,7 @@ class ProfilePictureUpload extends ConsumerStatefulWidget {
 
 class _ProfilePictureUploadState extends ConsumerState<ProfilePictureUpload> {
   XFile? _pickedImage;
+  Uint8List? _pickedImageBytes; // For web platform
 
   /// Show options dialog for image selection
   Future<void> _showImageSourceDialog() async {
@@ -48,17 +50,22 @@ class _ProfilePictureUploadState extends ConsumerState<ProfilePictureUpload> {
               ),
             ),
             const SizedBox(height: 20),
-            ListTile(
-              leading: const Icon(Icons.camera_alt, color: Colors.blue),
-              title: const Text('Camera', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(ImageSource.camera);
-              },
-            ),
+            // Only show camera option on mobile platforms
+            if (!kIsWeb)
+              ListTile(
+                leading: const Icon(Icons.camera_alt, color: Colors.blue),
+                title: const Text('Camera', style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
             ListTile(
               leading: const Icon(Icons.photo_library, color: Colors.blue),
-              title: const Text('Gallery', style: TextStyle(color: Colors.white)),
+              title: Text(
+                kIsWeb ? 'Choose File' : 'Gallery',
+                style: const TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _pickImage(ImageSource.gallery);
@@ -92,8 +99,12 @@ class _ProfilePictureUploadState extends ConsumerState<ProfilePictureUpload> {
       }
 
       if (image != null) {
+        // Read bytes immediately for preview (works on all platforms)
+        final bytes = await image.readAsBytes();
+        
         setState(() {
           _pickedImage = image;
+          _pickedImageBytes = bytes;
         });
 
         // Automatically upload
@@ -179,6 +190,7 @@ class _ProfilePictureUploadState extends ConsumerState<ProfilePictureUpload> {
 
       setState(() {
         _pickedImage = null;
+        _pickedImageBytes = null;
       });
 
       ref.read(profilePictureUploadingProvider.notifier).state = false;
@@ -202,6 +214,18 @@ class _ProfilePictureUploadState extends ConsumerState<ProfilePictureUpload> {
     }
   }
 
+  /// Get the appropriate image provider based on platform
+  ImageProvider? _getImageProvider(String? imageUrl) {
+    if (_pickedImage != null && _pickedImageBytes != null) {
+      // Show picked image using bytes (works on all platforms)
+      return MemoryImage(_pickedImageBytes!);
+    } else if (imageUrl != null && imageUrl.isNotEmpty) {
+      // Show existing image from network
+      return NetworkImage(imageUrl);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final isUploading = ref.watch(profilePictureUploadingProvider);
@@ -216,11 +240,7 @@ class _ProfilePictureUploadState extends ConsumerState<ProfilePictureUpload> {
           CircleAvatar(
             radius: 60,
             backgroundColor: Colors.grey[800],
-            backgroundImage: _pickedImage != null
-                ? FileImage(File(_pickedImage!.path)) as ImageProvider
-                : (imageUrl != null && imageUrl.isNotEmpty)
-                    ? NetworkImage(imageUrl) as ImageProvider
-                    : null,
+            backgroundImage: _getImageProvider(imageUrl),
             child: (imageUrl == null || imageUrl.isEmpty) && _pickedImage == null
                 ? Text(
                     currentUser?.name.substring(0, 1).toUpperCase() ?? 'U',

@@ -9,7 +9,10 @@ import 'package:btrips_unified/Model/preset_location_model.dart';
 import 'package:btrips_unified/View/Routes/routes.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Home_Screen/home_logics.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Home_Screen/home_providers.dart';
+import 'package:btrips_unified/View/Screens/Main_Screens/Sub_Screens/Where_To_Screen/where_to_screen.dart';
 import 'package:btrips_unified/data/providers/preset_location_providers.dart';
+import 'package:btrips_unified/data/providers/stripe_providers.dart';
+import 'package:btrips_unified/View/Screens/Main_Screens/Profile_Screen/Payment_Methods_Screen/payment_methods_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   final Completer<GoogleMapController> completer = Completer();
   GoogleMapController? controller;
+  bool _hasShownPaymentDialog = false;
 
   @override
   void initState() {
@@ -33,8 +37,179 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         MessagingService().init(context, ref);
+        _checkPaymentMethods();
       }
     });
+  }
+
+  void _checkPaymentMethods() async {
+    // Wait a bit for the screen to fully load
+    await Future.delayed(const Duration(seconds: 1));
+    
+    if (!mounted || _hasShownPaymentDialog) return;
+    
+    final hasPaymentMethods = await ref.read(hasPaymentMethodsProvider.future);
+    
+    if (!hasPaymentMethods && mounted && !_hasShownPaymentDialog) {
+      _hasShownPaymentDialog = true;
+      _showPaymentMethodReminder();
+    }
+  }
+
+  void _showPaymentMethodReminder() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.blue, width: 2),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.payment,
+                    size: 48,
+                    color: Colors.blue,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                
+                // Title
+                const Text(
+                  'Add a Payment Method',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                
+                // Message
+                Text(
+                  'To book rides, you\'ll need to add a payment method. It\'s quick and secure!',
+                  style: TextStyle(
+                    color: Colors.grey[300],
+                    fontSize: 16,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                
+                // Benefits
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                  ),
+                  child: Column(
+                    children: [
+                      _buildBenefitRow(Icons.check_circle, 'Secure payments via Stripe'),
+                      const SizedBox(height: 8),
+                      _buildBenefitRow(Icons.speed, 'Faster booking process'),
+                      const SizedBox(height: 8),
+                      _buildBenefitRow(Icons.lock, 'PCI-compliant encryption'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                
+                // Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(color: Colors.grey[600]!),
+                          ),
+                        ),
+                        child: const Text(
+                          'Later',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PaymentMethodsScreen(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Add Payment Method',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBenefitRow(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.blue, size: 20),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.grey[300],
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -193,16 +368,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                     : Colors.grey,
                                               ),
                                             ),
-                                            child: Text(
-                                              "Search",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .copyWith(
-                                                    color: !ref.watch(homeScreenPresetLocationsModeProvider)
-                                                        ? Colors.white
-                                                        : Colors.grey,
-                                                  ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.search,
+                                                  size: 16,
+                                                  color: !ref.watch(homeScreenPresetLocationsModeProvider)
+                                                      ? Colors.white
+                                                      : Colors.grey,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  "Search",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall!
+                                                      .copyWith(
+                                                        color: !ref.watch(homeScreenPresetLocationsModeProvider)
+                                                            ? Colors.white
+                                                            : Colors.grey,
+                                                      ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -226,16 +414,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                     : Colors.grey,
                                               ),
                                             ),
-                                            child: Text(
-                                              "Preset Locations",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .copyWith(
-                                                    color: ref.watch(homeScreenPresetLocationsModeProvider)
-                                                        ? Colors.white
-                                                        : Colors.grey,
-                                                  ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.flight_takeoff,
+                                                  size: 16,
+                                                  color: ref.watch(homeScreenPresetLocationsModeProvider)
+                                                      ? Colors.white
+                                                      : Colors.grey,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  "Airports",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall!
+                                                      .copyWith(
+                                                        color: ref.watch(homeScreenPresetLocationsModeProvider)
+                                                            ? Colors.white
+                                                            : Colors.grey,
+                                                      ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -340,63 +541,133 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     ),
                                   ),
                                     )
-                                  : InkWell(
-                                      onTap: () async {
-                                        await context.pushNamed(Routes().whereTo,
-                                            extra: controller);
-                                        if (context.mounted) {
-                                          HomeScreenLogics().openWhereToScreen(
-                                              context, ref, controller!);
-                                        }
-                                      },
-                                      child: Container(
-                                        width: size.width * 0.9,
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: const BoxDecoration(
-                                            border: Border(
-                                                bottom:
-                                                    BorderSide(color: Colors.blue))),
-                                        child: Row(
-                                          children: [
-                                            const Padding(
-                                              padding: EdgeInsets.only(right: 10.0),
-                                              child: Icon(
-                                                Icons.pin_drop_outlined,
+                                  : MouseRegion(
+                                      cursor: SystemMouseCursors.click,
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          debugPrint('🔍 Where To clicked - opening search screen');
+                                          final mapController = controller;
+                                          if (mapController != null) {
+                                            await Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => WhereToScreen(controller: mapController),
+                                              ),
+                                            );
+                                            if (context.mounted) {
+                                              HomeScreenLogics().openWhereToScreen(
+                                                  context, ref, mapController);
+                                            }
+                                          } else {
+                                            debugPrint('❌ Map controller is null');
+                                          }
+                                        },
+                                        child: Container(
+                                          width: size.width * 0.9,
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 15,
+                                            horizontal: 12,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.blue,
+                                              width: 1.5,
+                                            ),
+                                            borderRadius: BorderRadius.circular(8),
+                                            color: Colors.grey[850],
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.search,
                                                 color: Colors.blue,
+                                                size: 24,
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: size.width * 0.7,
-                                              child: Text(
-                                                ref
-                                                        .watch(
-                                                            homeScreenDropOffLocationProvider)
-                                                        ?.locationName ??
-                                                    "Where To",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall,
-                                                maxLines: 2,
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: Text(
+                                                  ref
+                                                          .watch(
+                                                              homeScreenDropOffLocationProvider)
+                                                          ?.locationName ??
+                                                      "Click to search destination...",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall!
+                                                      .copyWith(
+                                                        fontSize: 15,
+                                                        color: ref.watch(
+                                                                    homeScreenDropOffLocationProvider) ==
+                                                                null
+                                                            ? Colors.grey[400]
+                                                            : Colors.white,
+                                                      ),
+                                                  maxLines: 2,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                              Icon(
+                                                Icons.arrow_forward_ios,
+                                                size: 16,
+                                                color: Colors.grey[500],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                              // Time Selection Section
+                              // Request a Ride Button (Primary Action)
                               Padding(
-                                padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    HomeScreenLogics().requestARide(
+                                        size, context, ref, controller!);
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: size.width * 0.9,
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14.0),
+                                      color: Colors.orange,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.orange.withOpacity(0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Text(
+                                      "Request a Ride",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              
+                              // Time Selection Section (Secondary Options)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16.0, bottom: 10.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       "When",
-                                      style: Theme.of(context).textTheme.bodySmall,
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                        fontSize: 12,
+                                        color: Colors.grey[400],
+                                      ),
                                     ),
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 8),
                                     Row(
                                       children: [
-                                        // "Now" button
+                                        // "Now" button (smaller)
                                         Expanded(
                                           child: InkWell(
                                             onTap: () {
@@ -406,33 +677,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                   .update((state) => null);
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.symmetric(vertical: 12),
+                                              padding: const EdgeInsets.symmetric(
+                                                vertical: 8,
+                                                horizontal: 12,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color: !ref.watch(homeScreenIsSchedulingProvider)
                                                     ? Colors.blue
                                                     : Colors.grey[800],
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius: BorderRadius.circular(8),
                                                 border: Border.all(
                                                   color: !ref.watch(homeScreenIsSchedulingProvider)
                                                       ? Colors.blue
-                                                      : Colors.grey,
+                                                      : Colors.grey[700]!,
                                                 ),
                                               ),
-                                              child: Column(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Icon(
                                                     Icons.schedule,
+                                                    size: 18,
                                                     color: !ref.watch(homeScreenIsSchedulingProvider)
                                                         ? Colors.white
                                                         : Colors.grey,
                                                   ),
-                                                  const SizedBox(height: 4),
+                                                  const SizedBox(width: 6),
                                                   Text(
                                                     "Now",
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodySmall!
                                                         .copyWith(
+                                                          fontSize: 13,
                                                           color: !ref.watch(homeScreenIsSchedulingProvider)
                                                               ? Colors.white
                                                               : Colors.grey,
@@ -508,33 +785,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               }
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.symmetric(vertical: 12),
+                                              padding: const EdgeInsets.symmetric(
+                                                vertical: 8,
+                                                horizontal: 12,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color: ref.watch(homeScreenIsSchedulingProvider)
                                                     ? Colors.blue
                                                     : Colors.grey[800],
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius: BorderRadius.circular(8),
                                                 border: Border.all(
                                                   color: ref.watch(homeScreenIsSchedulingProvider)
                                                       ? Colors.blue
-                                                      : Colors.grey,
+                                                      : Colors.grey[700]!,
                                                 ),
                                               ),
-                                              child: Column(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Icon(
                                                     Icons.calendar_today,
+                                                    size: 18,
                                                     color: ref.watch(homeScreenIsSchedulingProvider)
                                                         ? Colors.white
                                                         : Colors.grey,
                                                   ),
-                                                  const SizedBox(height: 4),
+                                                  const SizedBox(width: 6),
                                                   Text(
                                                     "Schedule",
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodySmall!
                                                         .copyWith(
+                                                          fontSize: 13,
                                                           color: ref.watch(homeScreenIsSchedulingProvider)
                                                               ? Colors.white
                                                               : Colors.grey,
@@ -597,55 +880,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   ],
                                 ),
                               ),
+                              // Optional: Change Pickup button (smaller, secondary action)
                               Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      onTap: () => HomeScreenLogics()
-                                          .changePickUpLoc(
-                                              context, ref, controller!),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 50,
-                                        width: size.width * 0.4,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14.0),
-                                            color: Colors.blue),
-                                        child: Text(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: InkWell(
+                                  onTap: () => HomeScreenLogics()
+                                      .changePickUpLoc(context, ref, controller!),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: size.width * 0.9,
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: Colors.transparent,
+                                      border: Border.all(color: Colors.blue, width: 1),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.edit_location_alt,
+                                          color: Colors.blue,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
                                           "Change Pickup Location",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodySmall,
+                                              .bodySmall!
+                                              .copyWith(
+                                                color: Colors.blue,
+                                                fontSize: 13,
+                                              ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                      HomeScreenLogics().requestARide(
-                                            size, context, ref, controller!);
-                                      },
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 50,
-                                        width: size.width * 0.4,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14.0),
-                                            color: Colors.orange),
-                                        child: Text(
-                                          "Request a Ride",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               )
                             ],

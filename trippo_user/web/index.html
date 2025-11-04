@@ -69,6 +69,121 @@
     onerror="window.googleMapsError()">
   </script>
 
+  <!-- Stripe.js for web payment processing -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    // Initialize Stripe on web
+    var stripePublishableKey = 'pk_test_51SIvJVDjdHHArGB1gce3Dt39aBAZJSdERnMCLeF8VeYMzNNLpGRAW1M4ommB94O75CM65JKLVulbBATONp6ybzgM00tvHvblxc';
+    var stripe = null;
+    var cardElement = null;
+    var elements = null;
+    
+    // Initialize Stripe when script loads
+    if (typeof Stripe !== 'undefined') {
+      stripe = new Stripe(stripePublishableKey);
+      console.log('✅ Stripe.js loaded successfully');
+    } else {
+      console.error('❌ Stripe.js failed to load');
+    }
+    
+    // Create Stripe Elements card element
+    window.initializeStripeElements = function(containerElementId) {
+      try {
+        if (!stripe) {
+          throw new Error('Stripe not initialized');
+        }
+        
+        console.log('🎨 Initializing Stripe Elements...');
+        
+        // Create Elements instance
+        elements = stripe.elements();
+        
+        // Create card element with styling
+        cardElement = elements.create('card', {
+          style: {
+            base: {
+              color: '#ffffff',
+              fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+              fontSmoothing: 'antialiased',
+              fontSize: '16px',
+              '::placeholder': {
+                color: '#9e9e9e',
+              },
+            },
+            invalid: {
+              color: '#fa755a',
+              iconColor: '#fa755a',
+            },
+          },
+        });
+        
+        // Mount to container
+        const container = document.getElementById(containerElementId);
+        if (container) {
+          cardElement.mount('#' + containerElementId);
+          console.log('✅ Stripe Elements mounted to:', containerElementId);
+        } else {
+          console.error('❌ Container element not found:', containerElementId);
+        }
+        
+        return true;
+      } catch (error) {
+        console.error('❌ Failed to initialize Stripe Elements:', error);
+        return false;
+      }
+    };
+    
+    // Create payment method using Stripe Elements
+    // This is the REQUIRED approach for web PCI compliance
+    window.createStripePaymentMethod = async function(cardholderName) {
+      try {
+        if (!stripe || !cardElement) {
+          throw new Error('Stripe or card element not initialized');
+        }
+        
+        console.log('Creating payment method with Stripe Elements...');
+        console.log('  Cardholder:', cardholderName);
+        
+        // Create payment method using card element (NOT raw card data)
+        const result = await stripe.createPaymentMethod({
+          type: 'card',
+          card: cardElement,  // ← Uses card element, not raw data
+          billing_details: {
+            name: cardholderName,
+          },
+        });
+        
+        if (result.error) {
+          console.error('❌ Payment method creation error:', result.error);
+          throw new Error(result.error.message);
+        }
+        
+        console.log('✅ Payment method created:', result.paymentMethod.id);
+        console.log('   Card:', result.paymentMethod.card.brand, '••••', result.paymentMethod.card.last4);
+        
+        // Return payment method ID
+        return {
+          success: true,
+          paymentMethodId: result.paymentMethod.id,
+          last4: result.paymentMethod.card.last4,
+          brand: result.paymentMethod.card.brand,
+          expMonth: result.paymentMethod.card.exp_month,
+          expYear: result.paymentMethod.card.exp_year,
+        };
+      } catch (error) {
+        console.error('❌ Stripe payment method creation failed:', error);
+        return {
+          success: false,
+          error: error.message || 'Failed to create payment method',
+        };
+      }
+    };
+    
+    // Mark Stripe as ready
+    window.stripeReady = true;
+    console.log('✅ Stripe payment functions ready');
+  </script>
+
   <script>
     // The value below is injected by flutter build, do not touch.
     var serviceWorkerVersion = {{flutter_service_worker_version}};

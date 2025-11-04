@@ -95,9 +95,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       debugPrint('   UserType: ${user.userType}');
       debugPrint('   isDriver: ${user.isDriver}');
       debugPrint('   isRegularUser: ${user.isRegularUser}');
+      debugPrint('   isAdmin: ${user.isAdmin}');
 
       // Route based on user role
-      if (user.isDriver) {
+      if (user.isAdmin) {
+        // Admin user - go to admin dashboard
+        debugPrint('🔐 User is an ADMIN, navigating to admin dashboard');
+        if (mounted) context.go('/admin');
+      } else if (user.isDriver) {
         debugPrint('🚗 User is a DRIVER, checking config...');
         // Check if driver has completed vehicle configuration
         final hasConfig =

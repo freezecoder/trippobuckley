@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:btrips_unified/Model/driver_model.dart';
+import 'package:btrips_unified/data/models/payment_method_model.dart';
 
 import '../../../../Model/direction_model.dart';
 
@@ -70,4 +71,15 @@ final homeScreenIsSchedulingProvider = StateProvider<bool>((ref) {
 /// Current ride request ID - used to track the ride and listen for updates
 final currentRideRequestIdProvider = StateProvider<String?>((ref) {
   return null;
+});
+
+/// Selected payment method for the ride
+/// Can be null (no selection), a PaymentMethodModel (card), or 'cash'
+final homeScreenSelectedPaymentMethodProvider = StateProvider<PaymentMethodModel?>((ref) {
+  return null;
+});
+
+/// Whether the user selected cash payment
+final homeScreenPayCashProvider = StateProvider<bool>((ref) {
+  return false;
 });

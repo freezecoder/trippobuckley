@@ -1,0 +1,428 @@
+[debug] [2025-10-31T23:34:04.366Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:34:04.368Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:34:05.101Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:34:05.101Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:34:05.102Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:34:05.102Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:34:05.108Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:34:05.108Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:34:05.108Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:34:05.109Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:37.671Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:37.671Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:37.671Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:37.671Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:45.009Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:45.009Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:45.010Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:45.010Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:52.282Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:52.283Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:52.283Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:52.283Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:52.866Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.866Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.866Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:52.866Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:52.867Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.901Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.905Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.905Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.905Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:52.905Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:52.905Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.906Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.906Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:52.906Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:52.907Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.911Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.912Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.912Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:52.912Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:52.912Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.912Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:52.912Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:52.912Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:56.844Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:56.844Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:56.844Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:56.844Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:56.844Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:56.845Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:56.845Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:56.845Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:56.845Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:56.845Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:57.386Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:57.386Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:57.386Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:57.386Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:57.386Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:57.386Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:57.387Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:57.387Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:35:57.387Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:35:57.387Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:35:57.388Z] Checked if tokens are valid: false, expires at: 1761948016657
+[debug] [2025-10-31T23:35:57.388Z] Checked if tokens are valid: false, expires at: 1761948016657
+[debug] [2025-10-31T23:35:57.388Z] > refreshing access token with scopes: []
+[debug] [2025-10-31T23:35:57.389Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-10-31T23:35:57.389Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-31T23:35:57.940Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-10-31T23:35:57.941Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-31T23:35:57.957Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/trippo-42089 [none]
+[debug] [2025-10-31T23:35:58.572Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/trippo-42089 200
+[debug] [2025-10-31T23:35:58.572Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/trippo-42089 {"projectNumber":"833975987471","projectId":"trippo-42089","lifecycleState":"ACTIVE","name":"Trippo","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-10-25T15:23:57.535543Z"}
+[debug] [2025-10-31T23:36:03.680Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:03.680Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:03.680Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:36:03.680Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:36:03.680Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:03.680Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:03.681Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:03.681Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:36:03.681Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:36:03.681Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:03.681Z] Checked if tokens are valid: true, expires at: 1761957356941
+[debug] [2025-10-31T23:36:03.681Z] Checked if tokens are valid: true, expires at: 1761957356941
+[debug] [2025-10-31T23:36:03.682Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/releases pageSize=10&pageToken=
+[debug] [2025-10-31T23:36:04.293Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/releases 200
+[debug] [2025-10-31T23:36:04.293Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/releases {"releases":[{"name":"projects/trippo-42089/releases/cloud.firestore","rulesetName":"projects/trippo-42089/rulesets/d5e14c0f-03d7-4b1e-a377-88e21881b09a","createTime":"2025-10-25T15:28:45.092030Z","updateTime":"2025-10-31T19:55:08.928231Z"}]}
+[debug] [2025-10-31T23:36:58.628Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:58.629Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:58.629Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:36:58.629Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:36:58.629Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:58.629Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:58.629Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:58.630Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:36:58.630Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:36:58.630Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:36:58.630Z] Checked if tokens are valid: true, expires at: 1761957356941
+[debug] [2025-10-31T23:36:58.630Z] Checked if tokens are valid: true, expires at: 1761957356941
+[debug] [2025-10-31T23:36:58.630Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds [none]
+[debug] [2025-10-31T23:36:58.630Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds {"pageSize":2147483647}
+[debug] [2025-10-31T23:36:59.136Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds 200
+[debug] [2025-10-31T23:36:59.136Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds {"collectionIds":["Drivers","test.user@example.com","zayed.albertyn@gmail.com"]}
+[debug] [2025-10-31T23:37:05.428Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:05.429Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:05.429Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:37:05.429Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:37:05.429Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:05.429Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:05.429Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:05.429Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:37:05.429Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:37:05.429Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:05.430Z] Checked if tokens are valid: true, expires at: 1761957356941
+[debug] [2025-10-31T23:37:05.430Z] Checked if tokens are valid: true, expires at: 1761957356941
+[debug] [2025-10-31T23:37:05.430Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery [none]
+[debug] [2025-10-31T23:37:05.430Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery {"structuredQuery":{"from":[{"collectionId":"Drivers","allDescendants":false}],"where":{"compositeFilter":{"op":"AND","filters":[{"fieldFilter":{"field":{"fieldPath":"__name__"},"op":"GREATER_THAN_OR_EQUAL","value":{"stringValue":""}}}]}},"limit":1000},"explainOptions":{"analyze":true},"newTransaction":{"readOnly":{"readTime":"2025-10-31T23:37:05.430Z"}}}
+[debug] [2025-10-31T23:37:05.849Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery 400
+[debug] [2025-10-31T23:37:05.850Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery [{"error":{"code":400,"message":"The requested 'read_time' cannot be in the future.","status":"INVALID_ARGUMENT"}}]
+[debug] [2025-10-31T23:37:18.709Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:18.709Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:18.709Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:37:18.709Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:37:18.709Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:18.709Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:18.709Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:18.709Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-31T23:37:18.709Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-10-31T23:37:18.710Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-10-31T23:37:18.710Z] Checked if tokens are valid: true, expires at: 1761957356941
+[debug] [2025-10-31T23:37:18.710Z] Checked if tokens are valid: true, expires at: 1761957356941
+[debug] [2025-10-31T23:37:18.710Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery [none]
+[debug] [2025-10-31T23:37:18.710Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery {"structuredQuery":{"from":[{"collectionId":"Drivers","allDescendants":false}],"where":{"compositeFilter":{"op":"AND","filters":[{"fieldFilter":{"field":{"fieldPath":"email"},"op":"GREATER_THAN_OR_EQUAL","value":{"stringValue":""}}}]}},"limit":100},"explainOptions":{"analyze":true},"newTransaction":{"readOnly":{"readTime":"2025-10-31T23:37:18.710Z"}}}
+[debug] [2025-10-31T23:37:19.160Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery 400
+[debug] [2025-10-31T23:37:19.160Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery [{"error":{"code":400,"message":"The requested 'read_time' cannot be in the future.","status":"INVALID_ARGUMENT"}}]
+[debug] [2025-11-01T10:43:46.451Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T10:43:46.452Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T10:43:46.452Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T10:43:46.453Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T10:43:46.453Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T10:43:46.453Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T10:43:46.453Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T10:43:46.453Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T10:43:46.453Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T10:43:46.453Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T10:43:46.454Z] Checked if tokens are valid: false, expires at: 1761957356941
+[debug] [2025-11-01T10:43:46.454Z] Checked if tokens are valid: false, expires at: 1761957356941
+[debug] [2025-11-01T10:43:46.454Z] > refreshing access token with scopes: []
+[debug] [2025-11-01T10:43:46.455Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-01T10:43:46.455Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-01T10:43:46.599Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-01T10:43:46.599Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-01T10:43:46.613Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:batchGet [none]
+[debug] [2025-11-01T10:43:46.613Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:batchGet {"documents":["projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com"]}
+[debug] [2025-11-01T10:43:46.816Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:batchGet 200
+[debug] [2025-11-01T10:43:46.817Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:batchGet [{"found":{"name":"projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com","fields":{"Car Name":{"stringValue":"Yamaha R15"},"Car Plate Num":{"stringValue":"MOT-3456"},"Car Type":{"stringValue":"MotorCycle"},"driverLoc":{"mapValue":{"fields":{"geopoint":{"geoPointValue":{"latitude":39.8719,"longitude":-75.2411}}}}},"driverStatus":{"stringValue":"Idle"},"email":{"stringValue":"fatima.ahmed@driver.com"},"name":{"stringValue":"Fatima Ahmed"},"rate":{"doubleValue":3}},"createTime":"2025-10-31T21:03:45.832837Z","updateTime":"2025-10-31T21:44:55.452510Z"},"readTime":"2025-11-01T10:43:27.617486Z"}]
+[debug] [2025-11-01T10:43:46.819Z] Checked if tokens are valid: true, expires at: 1761997425599
+[debug] [2025-11-01T10:43:46.819Z] Checked if tokens are valid: true, expires at: 1761997425599
+[debug] [2025-11-01T10:43:46.819Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com:runQuery [none]
+[debug] [2025-11-01T10:43:46.819Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com:runQuery {"structuredQuery":{"limit":1,"from":[{"allDescendants":true}],"select":{"fields":[{"fieldPath":"__name__"}]},"orderBy":[{"field":{"fieldPath":"__name__"}}]}}
+[debug] [2025-11-01T10:43:46.945Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com:runQuery 200
+[debug] [2025-11-01T10:43:46.945Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com:runQuery [{"readTime":"2025-11-01T10:43:27.741673Z"}]
+[debug] [2025-11-01T10:43:46.946Z] Checked if tokens are valid: true, expires at: 1761997425599
+[debug] [2025-11-01T10:43:46.946Z] Checked if tokens are valid: true, expires at: 1761997425599
+[debug] [2025-11-01T10:43:46.946Z] >>> [apiv2][query] DELETE https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com [none]
+[debug] [2025-11-01T10:43:47.083Z] <<< [apiv2][status] DELETE https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com 200
+[debug] [2025-11-01T10:43:47.083Z] <<< [apiv2][body] DELETE https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com {}
+[debug] [2025-11-01T10:43:47.085Z] Checked if tokens are valid: true, expires at: 1761997425599
+[debug] [2025-11-01T10:43:47.085Z] Checked if tokens are valid: true, expires at: 1761997425599
+[debug] [2025-11-01T10:43:47.085Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com:runQuery [none]
+[debug] [2025-11-01T10:43:47.085Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com:runQuery {"structuredQuery":{"limit":7500,"from":[{"allDescendants":false}],"select":{"fields":[{"fieldPath":"__name__"}]},"orderBy":[{"field":{"fieldPath":"__name__"}}]}}
+[debug] [2025-11-01T10:43:47.197Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com:runQuery 200
+[debug] [2025-11-01T10:43:47.198Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com:runQuery [{"readTime":"2025-11-01T10:43:27.999249Z"}]
+[debug] [2025-11-01T10:43:47.198Z] Checked if tokens are valid: true, expires at: 1761997425599
+[debug] [2025-11-01T10:43:47.198Z] Checked if tokens are valid: true, expires at: 1761997425599
+[debug] [2025-11-01T10:43:47.198Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:batchGet [none]
+[debug] [2025-11-01T10:43:47.198Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:batchGet {"documents":["projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com"]}
+[debug] [2025-11-01T10:43:47.305Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:batchGet 200
+[debug] [2025-11-01T10:43:47.306Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:batchGet [{"missing":"projects/trippo-42089/databases/(default)/documents/Drivers/fatima.ahmed@driver.com","readTime":"2025-11-01T10:43:27.883763Z"}]
+[debug] [2025-11-01T11:43:01.036Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:01.038Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:01.039Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T11:43:01.039Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T11:43:01.039Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:01.039Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:01.039Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:01.039Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T11:43:01.039Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T11:43:01.039Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:33.035Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:33.036Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:33.036Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T11:43:33.036Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T11:43:33.036Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:33.036Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:33.036Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:33.037Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T11:43:33.037Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T11:43:33.037Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:33.037Z] Checked if tokens are valid: false, expires at: 1761997425599
+[debug] [2025-11-01T11:43:33.037Z] Checked if tokens are valid: false, expires at: 1761997425599
+[debug] [2025-11-01T11:43:33.037Z] > refreshing access token with scopes: []
+[debug] [2025-11-01T11:43:33.037Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-01T11:43:33.037Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-01T11:43:33.202Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-01T11:43:33.202Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-01T11:43:33.215Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test [none]
+[debug] [2025-11-01T11:43:33.215Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test [omitted]
+[debug] [2025-11-01T11:43:33.487Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test 200
+[debug] [2025-11-01T11:43:33.487Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test {}
+[debug] [2025-11-01T11:43:50.925Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:50.926Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:50.926Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T11:43:50.926Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T11:43:50.926Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:50.926Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:50.927Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:50.927Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T11:43:50.927Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T11:43:50.927Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:43:50.927Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T11:43:50.927Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T11:43:50.927Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds [none]
+[debug] [2025-11-01T11:43:50.927Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds {"pageSize":2147483647}
+[debug] [2025-11-01T11:43:51.082Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds 200
+[debug] [2025-11-01T11:43:51.082Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds {"collectionIds":["Drivers","test.user@example.com","zayed.albertyn@gmail.com"]}
+[debug] [2025-11-01T11:45:25.280Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:45:25.280Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:45:25.280Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T11:45:25.280Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T11:45:25.281Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:45:25.281Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:45:25.281Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:45:25.281Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T11:45:25.281Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T11:45:25.281Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T11:45:25.281Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T11:45:25.281Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T11:45:25.281Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds [none]
+[debug] [2025-11-01T11:45:25.281Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds {"pageSize":2147483647}
+[debug] [2025-11-01T11:45:25.432Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds 200
+[debug] [2025-11-01T11:45:25.432Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds {"collectionIds":["Drivers","test.user@example.com","zayed.albertyn@gmail.com"]}
+[debug] [2025-11-01T12:00:01.773Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:01.775Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:01.775Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T12:00:01.775Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T12:00:01.775Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:01.776Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:01.776Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:01.776Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T12:00:01.776Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T12:00:01.776Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:01.777Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T12:00:01.777Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T12:00:01.778Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/releases pageSize=10&pageToken=
+[debug] [2025-11-01T12:00:02.123Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/releases 200
+[debug] [2025-11-01T12:00:02.123Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/releases {"releases":[{"name":"projects/trippo-42089/releases/cloud.firestore","rulesetName":"projects/trippo-42089/rulesets/42cfefe9-b529-4cf7-b42a-5fc6e82f0d3d","createTime":"2025-10-25T15:28:45.092030Z","updateTime":"2025-11-01T11:43:24.583638Z"}]}
+[debug] [2025-11-01T12:00:03.223Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:03.223Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:03.224Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T12:00:03.224Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T12:00:03.224Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:03.224Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:03.224Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:03.224Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T12:00:03.224Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T12:00:03.224Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[info] ✔  Wrote configuration info to firebase.json 
+[info] ✔  Wrote project information to .firebaserc 
+[debug] [2025-11-01T12:00:19.927Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:19.928Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:19.928Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T12:00:19.928Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T12:00:19.928Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:19.928Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:19.929Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:19.929Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T12:00:19.929Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T12:00:19.929Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:19.929Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T12:00:19.929Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T12:00:19.929Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test [none]
+[debug] [2025-11-01T12:00:19.929Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test [omitted]
+[debug] [2025-11-01T12:00:20.180Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test 200
+[debug] [2025-11-01T12:00:20.180Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test {"issues":[{"sourcePosition":{"fileName":"test.rules","line":37,"column":11,"currentOffset":1004,"endOffset":1020},"description":"Missing 'match' keyword before path.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":37,"column":37,"currentOffset":1030,"endOffset":1030},"description":"Unexpected '.'.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":37,"column":37,"currentOffset":1030,"endOffset":1030},"description":"Unexpected '.'.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":37,"column":39,"currentOffset":1032,"endOffset":1040},"description":"Unexpected 'extension'.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":37,"column":50,"currentOffset":1043,"endOffset":1043},"description":"Unexpected '{'.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":52,"column":11,"currentOffset":1558,"endOffset":1572},"description":"Missing 'match' keyword before path.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":52,"column":37,"currentOffset":1584,"endOffset":1584},"description":"Unexpected '.'.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":52,"column":37,"currentOffset":1584,"endOffset":1584},"description":"Unexpected '.'.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":52,"column":39,"currentOffset":1586,"endOffset":1594},"description":"Unexpected 'extension'.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":52,"column":50,"currentOffset":1597,"endOffset":1597},"description":"Unexpected '{'.","severity":"ERROR"},{"sourcePosition":{"fileName":"test.rules","line":66,"column":5,"currentOffset":2038,"endOffset":2042},"description":"Unexpected 'match'.","severity":"ERROR"}]}
+[debug] [2025-11-01T12:00:51.031Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:51.031Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:51.031Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T12:00:51.031Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T12:00:51.031Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:51.031Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:51.031Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:51.032Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T12:00:51.032Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T12:00:51.032Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T12:00:51.032Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T12:00:51.032Z] Checked if tokens are valid: true, expires at: 1762001012202
+[debug] [2025-11-01T12:00:51.032Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test [none]
+[debug] [2025-11-01T12:00:51.032Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test [omitted]
+[debug] [2025-11-01T12:00:51.293Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test 200
+[debug] [2025-11-01T12:00:51.294Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/trippo-42089:test {}
+[debug] [2025-11-01T13:25:51.386Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:25:51.389Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:25:51.390Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:25:51.390Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:25:51.402Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:25:51.410Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:25:51.411Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:25:51.415Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:25:51.416Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:25:51.417Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:25:51.429Z] Checked if tokens are valid: false, expires at: 1762001012202
+[debug] [2025-11-01T13:25:51.429Z] Checked if tokens are valid: false, expires at: 1762001012202
+[debug] [2025-11-01T13:25:51.429Z] > refreshing access token with scopes: []
+[debug] [2025-11-01T13:25:51.430Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-01T13:25:51.430Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-01T13:25:51.569Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-01T13:25:51.569Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-01T13:25:51.582Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/releases pageSize=10&pageToken=
+[debug] [2025-11-01T13:25:51.800Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/releases 200
+[debug] [2025-11-01T13:25:51.800Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/releases {"releases":[{"name":"projects/trippo-42089/releases/cloud.firestore","rulesetName":"projects/trippo-42089/rulesets/42cfefe9-b529-4cf7-b42a-5fc6e82f0d3d","createTime":"2025-10-25T15:28:45.092030Z","updateTime":"2025-11-01T11:43:24.583638Z"},{"name":"projects/trippo-42089/releases/firebase.storage/trippo-42089.firebasestorage.app","rulesetName":"projects/trippo-42089/rulesets/df6f0f36-c584-4924-a61f-f71df9a4dde5","createTime":"2025-11-01T13:25:01.664149Z","updateTime":"2025-11-01T13:25:26.069367Z"}]}
+[debug] [2025-11-01T13:25:51.810Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:25:51.810Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:25:51.810Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/rulesets/df6f0f36-c584-4924-a61f-f71df9a4dde5 [none]
+[debug] [2025-11-01T13:25:51.980Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/rulesets/df6f0f36-c584-4924-a61f-f71df9a4dde5 200
+[debug] [2025-11-01T13:25:51.980Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/trippo-42089/rulesets/df6f0f36-c584-4924-a61f-f71df9a4dde5 [omitted]
+[debug] [2025-11-01T13:27:16.699Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:27:16.700Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:27:16.700Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:27:16.700Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:27:16.701Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:27:16.701Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:27:16.701Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:27:16.701Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:27:16.701Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:27:16.701Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:12.394Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:12.396Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:12.396Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:12.396Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:12.397Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:12.397Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:12.397Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:12.397Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:12.397Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:12.397Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:27.595Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:27.596Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:27.596Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:27.596Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:27.596Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:27.596Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:27.596Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:27.596Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:27.596Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:27.596Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:27.596Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:27.596Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:27.597Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds [none]
+[debug] [2025-11-01T13:39:27.597Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds {"pageSize":2147483647}
+[debug] [2025-11-01T13:39:27.952Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds 200
+[debug] [2025-11-01T13:39:27.952Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:listCollectionIds {"collectionIds":["Drivers","test.user@example.com","zayed.albertyn@gmail.com"]}
+[debug] [2025-11-01T13:39:28.076Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:28.077Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:28.077Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:28.077Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:28.077Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:28.077Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:28.077Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:28.077Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:28.077Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:28.078Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:34.953Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:34.953Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:34.954Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:34.954Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:34.954Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:34.954Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:34.954Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:34.954Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:34.954Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:34.954Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:34.954Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:34.954Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:34.954Z] >>> [apiv2][query] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery [none]
+[debug] [2025-11-01T13:39:34.954Z] >>> [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery {"structuredQuery":{"from":[{"collectionId":"Drivers","allDescendants":false}],"where":{"compositeFilter":{"op":"AND","filters":[]}},"limit":10},"explainOptions":{"analyze":true},"newTransaction":{"readOnly":{"readTime":"2025-11-01T13:39:34.954Z"}}}
+[debug] [2025-11-01T13:39:35.288Z] <<< [apiv2][status] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery 400
+[debug] [2025-11-01T13:39:35.288Z] <<< [apiv2][body] POST https://firestore.googleapis.com/v1/projects/trippo-42089/databases/(default)/documents:runQuery [{"error":{"code":400,"message":"The requested 'read_time' cannot be in the future.","status":"INVALID_ARGUMENT"}}]
+[debug] [2025-11-01T13:39:39.899Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:39.899Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:39.899Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:39.899Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:39.899Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:39.899Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:39.900Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:39.900Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:39.900Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:39.900Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:39.900Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:39.900Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:39.900Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/trippo-42089 [none]
+[debug] [2025-11-01T13:39:40.187Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/trippo-42089 200
+[debug] [2025-11-01T13:39:40.187Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/trippo-42089 {"projectNumber":"833975987471","projectId":"trippo-42089","lifecycleState":"ACTIVE","name":"Trippo","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-10-25T15:23:57.535543Z"}
+[debug] [2025-11-01T13:39:48.023Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:48.023Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:48.024Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:48.024Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:48.024Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:48.024Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:48.024Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:48.024Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-01T13:39:48.024Z] > authorizing via signed-in user (zayed.albertyn@gmail.com)
+[debug] [2025-11-01T13:39:48.024Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2025-11-01T13:39:48.025Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:48.025Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:48.025Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/btrips-42089/services/cloudresourcemanager.googleapis.com [none]
+[debug] [2025-11-01T13:39:48.025Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/btrips-42089/services/cloudresourcemanager.googleapis.com x-goog-quota-user=projects/btrips-42089
+[debug] [2025-11-01T13:39:48.471Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/btrips-42089/services/cloudresourcemanager.googleapis.com 403
+[debug] [2025-11-01T13:39:48.471Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/btrips-42089/services/cloudresourcemanager.googleapis.com [omitted]
+[debug] [2025-11-01T13:39:48.472Z] Unable to check that https://cloudresourcemanager.googleapis.com is enabled on btrips-42089. Calls to it will fail if it is not enabled
+[debug] [2025-11-01T13:39:48.472Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:48.472Z] Checked if tokens are valid: true, expires at: 1762007150569
+[debug] [2025-11-01T13:39:48.472Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/btrips-42089 [none]
+[debug] [2025-11-01T13:39:48.795Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/btrips-42089 403
+[debug] [2025-11-01T13:39:48.796Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/btrips-42089 {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}

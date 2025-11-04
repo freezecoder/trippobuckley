@@ -67,15 +67,15 @@ class _EditContactInfoScreenState
     super.dispose();
   }
 
-  /// Validate phone number
+  /// Validate phone number (REQUIRED)
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
-      return null; // Phone is optional
+      return 'Phone number is required for text updates';
     }
     
     final phoneRegex = RegExp(AppConstants.phoneRegex);
     if (!phoneRegex.hasMatch(value)) {
-      return 'Please enter a valid phone number';
+      return 'Please enter a valid phone number (e.g., +1 555-123-4567)';
     }
     return null;
   }
@@ -83,6 +83,7 @@ class _EditContactInfoScreenState
   /// Save contact information
   Future<void> _saveContactInfo() async {
     if (!_formKey.currentState!.validate()) {
+      debugPrint('❌ Form validation failed');
       return;
     }
 
@@ -94,32 +95,50 @@ class _EditContactInfoScreenState
         throw Exception('User not found');
       }
 
+      final phoneNumber = phoneController.text.trim();
+      final homeAddress = addressController.text.trim();
+      
+      debugPrint('📞 Saving contact info for user: ${currentUser.uid}');
+      debugPrint('   Phone: $phoneNumber');
+      debugPrint('   Address: $homeAddress');
+
       final userRepo = ref.read(userRepositoryProvider);
 
       // Update phone number in users collection
+      debugPrint('💾 Updating phone number in Firestore...');
       await userRepo.updateUserProfile(
         userId: currentUser.uid,
-        phoneNumber: phoneController.text.trim(),
+        phoneNumber: phoneNumber,
       );
+      debugPrint('✅ Phone number updated in Firestore');
 
       // Update address based on role
       if (!widget.isDriver) {
+        debugPrint('💾 Updating home address in userProfiles...');
         // For regular users, save to userProfiles
         await userRepo.updateAddresses(
           userId: currentUser.uid,
-          homeAddress: addressController.text.trim(),
+          homeAddress: homeAddress,
         );
+        debugPrint('✅ Home address updated in userProfiles');
       }
       // For drivers, address could be saved to drivers collection if needed
       // Currently drivers don't have address field, but can be added
+
+      // Invalidate providers to refresh data
+      debugPrint('🔄 Invalidating providers to refresh...');
+      ref.invalidate(currentUserProvider);
+      if (!widget.isDriver) {
+        ref.invalidate(userProfileProvider);
+      }
 
       ref.read(editContactInfoLoadingProvider.notifier).state = false;
 
       if (mounted) {
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text(AppConstants.profileUpdatedMessage),
+          const SnackBar(
+            content: Text('✅ Contact information updated successfully'),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
           ),
@@ -129,6 +148,7 @@ class _EditContactInfoScreenState
         Navigator.of(context).pop();
       }
     } catch (e) {
+      debugPrint('❌ Error saving contact info: $e');
       ref.read(editContactInfoLoadingProvider.notifier).state = false;
       if (mounted) {
         ErrorNotification().showError(
@@ -158,11 +178,11 @@ class _EditContactInfoScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Info text
+                // Info text - Contact info importance
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withValues(alpha: 0.1),
+                    color: Colors.blue.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.blue),
                   ),
@@ -180,15 +200,97 @@ class _EditContactInfoScreenState
                   ),
                 ),
                 
+                const SizedBox(height: 16),
+
+                // Phone number requirement reminder
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.orange),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.phone_android, color: Colors.orange, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Phone Number Required',
+                            style: TextStyle(
+                              color: Colors.orange[300],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Your phone number is required to receive important text updates about your rides, including:',
+                        style: TextStyle(
+                          color: Colors.orange[200],
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ...['Driver assignment notifications', 'Ride status updates', 'Arrival notifications', 'Emergency contact']
+                          .map((item) => Padding(
+                                padding: const EdgeInsets.only(left: 8, top: 4),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.check_circle, 
+                                      color: Colors.orange[300], size: 14),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        item,
+                                        style: TextStyle(
+                                          color: Colors.orange[100],
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ))
+                          .toList(),
+                    ],
+                  ),
+                ),
+                
                 const SizedBox(height: 24),
 
                 // Phone Number Field
-                Text(
-                  'Phone Number',
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: Colors.white,
-                        fontSize: 16,
+                Row(
+                  children: [
+                    Text(
+                      'Phone Number',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: Colors.red),
                       ),
+                      child: const Text(
+                        'REQUIRED',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -198,6 +300,8 @@ class _EditContactInfoScreenState
                   decoration: InputDecoration(
                     hintText: '+1 (555) 123-4567',
                     hintStyle: TextStyle(color: Colors.grey[600]),
+                    helperText: 'Required for ride notifications and driver contact',
+                    helperStyle: TextStyle(color: Colors.orange[300], fontSize: 11),
                     filled: true,
                     fillColor: Colors.grey[900],
                     border: OutlineInputBorder(
@@ -211,6 +315,14 @@ class _EditContactInfoScreenState
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(color: Colors.blue),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Colors.red),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Colors.red, width: 2),
                     ),
                     prefixIcon: const Icon(Icons.phone, color: Colors.blue),
                   ),

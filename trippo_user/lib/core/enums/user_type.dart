@@ -4,7 +4,10 @@ enum UserType {
   user,
   
   /// Driver who provides rides
-  driver;
+  driver,
+  
+  /// Administrator with full system access
+  admin;
 
   /// Get display name for user type
   String get displayName {
@@ -13,6 +16,8 @@ enum UserType {
         return 'Passenger';
       case UserType.driver:
         return 'Driver';
+      case UserType.admin:
+        return 'Administrator';
     }
   }
 
@@ -23,6 +28,8 @@ enum UserType {
         return 'Book rides and travel comfortably';
       case UserType.driver:
         return 'Drive and earn money';
+      case UserType.admin:
+        return 'Manage users, drivers, and system operations';
     }
   }
 
@@ -33,6 +40,8 @@ enum UserType {
         return 'person';
       case UserType.driver:
         return 'local_taxi';
+      case UserType.admin:
+        return 'admin_panel_settings';
     }
   }
 

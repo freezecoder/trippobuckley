@@ -265,6 +265,28 @@ class FirestoreRepo {
       debugPrint('   Pickup: $pickupAddr');
       debugPrint('   Dropoff: $dropoffAddr');
 
+      // Get payment information from providers
+      final selectedPaymentMethod = ref.read(homeScreenSelectedPaymentMethodProvider);
+      final payCash = ref.read(homeScreenPayCashProvider);
+      
+      // Determine payment method type
+      String paymentMethod = 'cash'; // Default
+      String? paymentMethodId;
+      String? paymentMethodLast4;
+      String? paymentMethodBrand;
+      
+      if (!payCash && selectedPaymentMethod != null) {
+        // User selected a card
+        paymentMethod = 'card';
+        paymentMethodId = selectedPaymentMethod.stripePaymentMethodId;
+        paymentMethodLast4 = selectedPaymentMethod.last4;
+        paymentMethodBrand = selectedPaymentMethod.brand;
+        
+        debugPrint('💳 Ride will be paid with card: ${selectedPaymentMethod.fullDisplayString}');
+      } else {
+        debugPrint('💵 Ride will be paid with cash');
+      }
+
       // Use the new unified rideRequests collection
       final docRef = await db.collection('rideRequests').add({
         "userId": auth.currentUser!.uid,
@@ -288,6 +310,13 @@ class FirestoreRepo {
         "distance": distance,
         "duration": duration,
         "route": null,
+        // Payment information
+        "paymentMethod": paymentMethod,
+        "paymentMethodId": paymentMethodId,
+        "paymentMethodLast4": paymentMethodLast4,
+        "paymentMethodBrand": paymentMethodBrand,
+        "paymentStatus": "pending",
+        "stripePaymentIntentId": null, // Will be set when payment is processed
       });
 
       debugPrint('✅ Ride request created with ID: ${docRef.id}');
