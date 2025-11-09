@@ -416,6 +416,79 @@ class StripeRepository {
     }
   }
   
+  /// Process ride payment via cloud function
+  /// This charges the customer's card for a completed ride
+  Future<Map<String, dynamic>> processRidePayment({
+    required String rideId,
+    required String userId,
+    required double amount,
+    required String paymentMethodId,
+  }) async {
+    try {
+      print('💳 Processing ride payment: \$$amount for ride $rideId');
+      
+      final response = await http.post(
+        Uri.parse('$_functionsBaseUrl/processRidePayment'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'rideId': rideId,
+          'userId': userId,
+          'amount': amount,
+          'paymentMethodId': paymentMethodId,
+        }),
+      );
+      
+      if (response.statusCode != 200) {
+        final errorBody = json.decode(response.body);
+        throw Exception(errorBody['error'] ?? 'Failed to process ride payment');
+      }
+      
+      final data = json.decode(response.body);
+      print('✅ Ride payment processed: ${data['paymentIntentId']}');
+      return data;
+    } catch (e) {
+      print('❌ Error processing ride payment: $e');
+      throw Exception('Failed to process ride payment: $e');
+    }
+  }
+  
+  /// Process admin invoice (one-off charge)
+  /// Allows admins to manually charge a customer's default payment method
+  Future<Map<String, dynamic>> processAdminInvoice({
+    required String userEmail,
+    required double amount,
+    required String description,
+    String? adminEmail,
+  }) async {
+    try {
+      print('🔐 Processing admin invoice: \$$amount for $userEmail');
+      print('   Reason: $description');
+      
+      final response = await http.post(
+        Uri.parse('$_functionsBaseUrl/processAdminInvoice'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'userEmail': userEmail,
+          'amount': amount,
+          'description': description,
+          'adminEmail': adminEmail ?? 'admin',
+        }),
+      );
+      
+      if (response.statusCode != 200) {
+        final errorBody = json.decode(response.body);
+        throw Exception(errorBody['error'] ?? 'Failed to process admin invoice');
+      }
+      
+      final data = json.decode(response.body);
+      print('✅ Admin invoice processed: ${data['paymentIntentId']}');
+      return data;
+    } catch (e) {
+      print('❌ Error processing admin invoice: $e');
+      throw Exception('Failed to process admin invoice: $e');
+    }
+  }
+  
   // ================== UTILITY METHODS ==================
   
   /// Present payment sheet (for one-time payments)

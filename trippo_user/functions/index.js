@@ -451,3 +451,419 @@ exports.placesAutocomplete = placesProxy.placesAutocomplete;
  */
 exports.placeDetails = placesProxy.placeDetails;
 
+// ============================================================================
+// RIDE PAYMENT PROCESSING
+// ============================================================================
+
+/**
+ * Process Ride Payment
+ * 
+ * Charges the customer's card for a completed ride using Stripe Payment Intents.
+ * This function is called automatically after a driver completes a ride (for card payments).
+ * For cash payments, this function is not called - the payment is recorded directly.
+ * 
+ * Request body:
+ * {
+ *   rideId: string,
+ *   userId: string,
+ *   amount: number (in dollars, e.g. 25.50),
+ *   paymentMethodId: string (Stripe payment method ID)
+ * }
+ * 
+ * Response:
+ * {
+ *   success: true,
+ *   paymentIntentId: "pi_...",
+ *   status: "succeeded",
+ *   message: "Payment processed successfully"
+ * }
+ */
+exports.processRidePayment = functions.https.onRequest((request, response) => {
+  cors(request, response, async () => {
+    try {
+      if (request.method !== 'POST') {
+        response.status(405).json({
+          success: false,
+          error: 'Method not allowed. Use POST.'
+        });
+        return;
+      }
+
+      const { rideId, userId, amount, paymentMethodId } = request.body;
+
+      // Validate required fields
+      if (!rideId || !userId || !amount || !paymentMethodId) {
+        response.status(400).json({
+          success: false,
+          error: 'Missing required fields: rideId, userId, amount, paymentMethodId'
+        });
+        return;
+      }
+
+      // Validate amount
+      if (amount <= 0) {
+        response.status(400).json({
+          success: false,
+          error: 'Amount must be greater than 0'
+        });
+        return;
+      }
+
+      // Convert amount to cents
+      const amountCents = Math.round(amount * 100);
+
+      // Get customer ID from Firestore
+      const customerDoc = await admin.firestore()
+        .collection('stripeCustomers')
+        .doc(userId)
+        .get();
+
+      if (!customerDoc.exists) {
+        response.status(404).json({
+          success: false,
+          error: 'Stripe customer not found for this user'
+        });
+        return;
+      }
+
+      const customerData = customerDoc.data();
+      const stripeCustomerId = customerData.stripeCustomerId;
+
+      console.log(`💳 Processing ride payment: $${amount} for ride ${rideId}`);
+
+      // Create and confirm Payment Intent in one step
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amountCents,
+        currency: 'usd',
+        customer: stripeCustomerId,
+        payment_method: paymentMethodId,
+        confirm: true, // Immediately attempt to charge
+        automatic_payment_methods: {
+          enabled: true,
+          allow_redirects: 'never' // No redirects for ride payments
+        },
+        metadata: {
+          rideId: rideId,
+          userId: userId,
+          app: 'BTrips',
+          type: 'ride_payment'
+        },
+        description: `BTrips Ride ${rideId}`
+      });
+
+      // Update ride in Firestore with payment details
+      await admin.firestore()
+        .collection('rideRequests')
+        .doc(rideId)
+        .update({
+          stripePaymentIntentId: paymentIntent.id,
+          paymentStatus: paymentIntent.status === 'succeeded' ? 'completed' : 'failed',
+          paymentProcessedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+
+      // Also update in ride history if it exists
+      const rideHistoryDoc = await admin.firestore()
+        .collection('rideHistory')
+        .doc(rideId)
+        .get();
+      
+      if (rideHistoryDoc.exists) {
+        await admin.firestore()
+          .collection('rideHistory')
+          .doc(rideId)
+          .update({
+            stripePaymentIntentId: paymentIntent.id,
+            paymentStatus: paymentIntent.status === 'succeeded' ? 'completed' : 'failed',
+            paymentProcessedAt: admin.firestore.FieldValue.serverTimestamp()
+          });
+      }
+
+      console.log(`✅ Payment processed successfully: ${paymentIntent.id}`);
+
+      response.status(200).json({
+        success: true,
+        paymentIntentId: paymentIntent.id,
+        status: paymentIntent.status,
+        message: 'Payment processed successfully'
+      });
+
+    } catch (error) {
+      console.error('❌ Error processing ride payment:', error);
+      
+      // Update ride with failed payment status
+      if (request.body.rideId) {
+        try {
+          await admin.firestore()
+            .collection('rideRequests')
+            .doc(request.body.rideId)
+            .update({
+              paymentStatus: 'failed',
+              paymentError: error.message,
+              paymentProcessedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+
+          // Also update in ride history
+          const rideHistoryDoc = await admin.firestore()
+            .collection('rideHistory')
+            .doc(request.body.rideId)
+            .get();
+          
+          if (rideHistoryDoc.exists) {
+            await admin.firestore()
+              .collection('rideHistory')
+              .doc(request.body.rideId)
+              .update({
+                paymentStatus: 'failed',
+                paymentError: error.message,
+                paymentProcessedAt: admin.firestore.FieldValue.serverTimestamp()
+              });
+          }
+        } catch (updateError) {
+          console.error('Failed to update ride with error status:', updateError);
+        }
+      }
+      
+      response.status(500).json({
+        success: false,
+        error: error.message || 'Failed to process payment'
+      });
+    }
+  });
+});
+
+/**
+ * Process Admin Invoice (One-Off Charge)
+ * 
+ * Allows admins to manually charge a customer's default payment method
+ * for custom amounts (fees, penalties, adjustments, etc.)
+ * 
+ * Request body:
+ * {
+ *   userEmail: string,
+ *   amount: number (in dollars, e.g. 25.50),
+ *   description: string (reason for charge),
+ *   adminEmail: string (who initiated the charge)
+ * }
+ * 
+ * Response:
+ * {
+ *   success: true,
+ *   paymentIntentId: "pi_...",
+ *   status: "succeeded",
+ *   message: "Invoice processed successfully"
+ * }
+ */
+exports.processAdminInvoice = functions.https.onRequest((request, response) => {
+  cors(request, response, async () => {
+    try {
+      if (request.method !== 'POST') {
+        response.status(405).json({
+          success: false,
+          error: 'Method not allowed. Use POST.'
+        });
+        return;
+      }
+
+      const { userEmail, amount, description, adminEmail } = request.body;
+
+      // Validate required fields
+      if (!userEmail || !amount || !description) {
+        response.status(400).json({
+          success: false,
+          error: 'Missing required fields: userEmail, amount, description'
+        });
+        return;
+      }
+
+      // Validate amount
+      if (amount <= 0) {
+        response.status(400).json({
+          success: false,
+          error: 'Amount must be greater than 0'
+        });
+        return;
+      }
+
+      // Convert amount to cents
+      const amountCents = Math.round(amount * 100);
+
+      console.log(`🔐 Admin invoice request from: ${adminEmail || 'Unknown'}`);
+      console.log(`   Charging: ${userEmail} for $${amount}`);
+      console.log(`   Reason: ${description}`);
+
+      // Get user ID from email
+      const usersSnapshot = await admin.firestore()
+        .collection('users')
+        .where('email', '==', userEmail)
+        .limit(1)
+        .get();
+
+      if (usersSnapshot.empty) {
+        response.status(404).json({
+          success: false,
+          error: 'User not found with that email'
+        });
+        return;
+      }
+
+      const userId = usersSnapshot.docs[0].id;
+
+      // Get customer from Firestore
+      const customerDoc = await admin.firestore()
+        .collection('stripeCustomers')
+        .doc(userId)
+        .get();
+
+      if (!customerDoc.exists) {
+        response.status(404).json({
+          success: false,
+          error: 'No Stripe customer found for this user. User must add a payment method first.'
+        });
+        return;
+      }
+
+      const customerData = customerDoc.data();
+      const stripeCustomerId = customerData.stripeCustomerId;
+      const defaultPaymentMethodId = customerData.defaultPaymentMethodId;
+
+      if (!defaultPaymentMethodId) {
+        response.status(400).json({
+          success: false,
+          error: 'User has no default payment method. Ask them to add a card first.'
+        });
+        return;
+      }
+
+      console.log(`💳 Processing admin invoice: $${amount}`);
+
+      // Create and confirm Payment Intent
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amountCents,
+        currency: 'usd',
+        customer: stripeCustomerId,
+        payment_method: defaultPaymentMethodId,
+        confirm: true,
+        automatic_payment_methods: {
+          enabled: true,
+          allow_redirects: 'never'
+        },
+        metadata: {
+          userId: userId,
+          userEmail: userEmail,
+          adminEmail: adminEmail || 'admin',
+          type: 'admin_invoice',
+          app: 'BTrips'
+        },
+        description: `Admin Invoice: ${description}`
+      });
+
+      // Save invoice record to Firestore
+      const invoiceData = {
+        userId: userId,
+        userEmail: userEmail,
+        amount: amount,
+        amountCents: amountCents,
+        description: description,
+        adminEmail: adminEmail || 'admin',
+        stripePaymentIntentId: paymentIntent.id,
+        status: paymentIntent.status,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        stripeCustomerId: stripeCustomerId,
+        paymentMethodId: defaultPaymentMethodId,
+      };
+      
+      await admin.firestore()
+        .collection('adminInvoices')
+        .add(invoiceData);
+
+      console.log(`✅ Admin invoice processed: ${paymentIntent.id}`);
+      
+      // If this is a ride payment (description starts with "Ride:"), update ride status
+      if (description.startsWith('Ride:')) {
+        console.log(`🚗 This is a ride payment, searching for matching ride...`);
+        
+        // Try to find and update the ride payment status
+        try {
+          // Search in rideRequests first
+          const rideRequestsQuery = await admin.firestore()
+            .collection('rideRequests')
+            .where('userId', '==', userId)
+            .where('status', '==', 'completed')
+            .where('paymentStatus', '==', 'pending')
+            .orderBy('completedAt', 'desc')
+            .limit(1)
+            .get();
+          
+          if (!rideRequestsQuery.empty) {
+            const rideDoc = rideRequestsQuery.docs[0];
+            await rideDoc.ref.update({
+              paymentStatus: 'completed',
+              stripePaymentIntentId: paymentIntent.id,
+              paymentProcessedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            console.log(`✅ Updated ride ${rideDoc.id} payment status in rideRequests`);
+          }
+          
+          // Also check rideHistory
+          const rideHistoryQuery = await admin.firestore()
+            .collection('rideHistory')
+            .where('userId', '==', userId)
+            .where('status', '==', 'completed')
+            .where('paymentStatus', '==', 'pending')
+            .orderBy('completedAt', 'desc')
+            .limit(1)
+            .get();
+          
+          if (!rideHistoryQuery.empty) {
+            const rideDoc = rideHistoryQuery.docs[0];
+            await rideDoc.ref.update({
+              paymentStatus: 'completed',
+              stripePaymentIntentId: paymentIntent.id,
+              paymentProcessedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            console.log(`✅ Updated ride ${rideDoc.id} payment status in rideHistory`);
+          }
+        } catch (updateError) {
+          console.error('⚠️ Could not update ride payment status:', updateError.message);
+          // Don't fail the invoice if we can't update the ride
+        }
+      }
+
+      response.status(200).json({
+        success: true,
+        paymentIntentId: paymentIntent.id,
+        status: paymentIntent.status,
+        message: 'Invoice processed successfully',
+        chargedAmount: amount
+      });
+
+    } catch (error) {
+      console.error('❌ Error processing admin invoice:', error);
+      
+      // Log failed attempt
+      if (request.body.userEmail) {
+        try {
+          await admin.firestore()
+            .collection('adminInvoices')
+            .add({
+              userEmail: request.body.userEmail,
+              amount: request.body.amount,
+              description: request.body.description,
+              adminEmail: request.body.adminEmail || 'admin',
+              status: 'failed',
+              error: error.message,
+              createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+        } catch (logError) {
+          console.error('Failed to log error:', logError);
+        }
+      }
+      
+      response.status(500).json({
+        success: false,
+        error: error.message || 'Failed to process admin invoice'
+      });
+    }
+  });
+});
+

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../data/providers/ride_providers.dart';
 import '../../../../../data/providers/auth_providers.dart';
+import '../../../../../data/providers/stripe_providers.dart';
 import '../../../../../core/enums/ride_status.dart';
 import '../../../../../data/models/ride_request_model.dart';
 import '../widgets/passenger_info_card.dart';
@@ -66,6 +67,10 @@ class DriverActiveRidesScreen extends ConsumerWidget {
               final ride = rides[index];
               final isAccepted = ride.status == RideStatus.accepted;
               final isOngoing = ride.status == RideStatus.ongoing;
+              final isCompleted = ride.status == RideStatus.completed;
+              final isCashPayment = ride.paymentMethod == 'cash';
+              final paymentPending = ride.paymentStatus == 'pending';
+              final needsCashConfirmation = isCompleted && isCashPayment && paymentPending;
               
               return Card(
                 color: Colors.white,
@@ -139,13 +144,56 @@ class DriverActiveRidesScreen extends ConsumerWidget {
                               ),
                             ),
                           const Spacer(),
-                          Text(
-                            '\$${ride.fare.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '\$${ride.fare.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              // Payment method indicator
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: ride.paymentMethod == 'cash' 
+                                      ? Colors.orange.withValues(alpha: 0.2)
+                                      : Colors.blue.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      ride.paymentMethod == 'cash' 
+                                          ? Icons.payments 
+                                          : Icons.credit_card,
+                                      size: 12,
+                                      color: ride.paymentMethod == 'cash' 
+                                          ? Colors.orange 
+                                          : Colors.blue,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      ride.paymentMethod == 'cash' ? 'Cash' : 'Card',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: ride.paymentMethod == 'cash' 
+                                            ? Colors.orange 
+                                            : Colors.blue,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -204,8 +252,8 @@ class DriverActiveRidesScreen extends ConsumerWidget {
                                           color: Colors.black87,
                                           fontWeight: FontWeight.w500,
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.visible,
                                       ),
                                     ],
                                   ),
@@ -270,8 +318,8 @@ class DriverActiveRidesScreen extends ConsumerWidget {
                                           color: Colors.black87,
                                           fontWeight: FontWeight.w500,
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.visible,
                                       ),
                                     ],
                                   ),
@@ -450,11 +498,15 @@ class DriverActiveRidesScreen extends ConsumerWidget {
                                   // Complete the ride (drop off passenger)
                                   try {
                                     final rideRepo = ref.read(rideRepositoryProvider);
+                                    final stripeRepo = ref.read(stripeRepositoryProvider);
                                     final fareAmount = ride.fare;
+                                    final isCashPayment = ride.paymentMethod == 'cash';
                                     
                                     await rideRepo.completeRide(ride.id);
 
-                                    if (context.mounted) {
+                                    // Handle automatic credit card payment
+                                    if (!isCashPayment && context.mounted) {
+                                      // Show message that payment will be processed
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                           content: Column(
@@ -485,12 +537,97 @@ class DriverActiveRidesScreen extends ConsumerWidget {
                                               ),
                                               const SizedBox(height: 4),
                                               const Text(
-                                                'Great job! Check your Earnings tab.',
+                                                'Payment will be processed in 5 seconds...',
                                                 style: TextStyle(fontSize: 13),
                                               ),
                                             ],
                                           ),
                                           backgroundColor: Colors.green[700],
+                                          duration: const Duration(seconds: 4),
+                                          behavior: SnackBarBehavior.floating,
+                                        ),
+                                      );
+
+                                      // Process payment after 5 seconds using admin invoice function
+                                      Future.delayed(const Duration(seconds: 5), () async {
+                                        try {
+                                          final currentUser = await ref.read(currentUserProvider.future);
+                                          
+                                          print('💳 Processing ride payment for ${ride.userEmail}...');
+                                          
+                                          // Use admin invoice function for consolidated payment processing
+                                          await stripeRepo.processAdminInvoice(
+                                            userEmail: ride.userEmail,
+                                            amount: fareAmount,
+                                            description: 'Ride: ${ride.pickupAddress.length > 30 ? ride.pickupAddress.substring(0, 30) + "..." : ride.pickupAddress} → ${ride.dropoffAddress.length > 30 ? ride.dropoffAddress.substring(0, 30) + "..." : ride.dropoffAddress}',
+                                            adminEmail: 'system-ride-completion',
+                                          );
+
+                                          print('✅ Payment processed successfully');
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(
+                                                content: Text('Payment processed successfully!'),
+                                                backgroundColor: Colors.green,
+                                                duration: Duration(seconds: 2),
+                                              ),
+                                            );
+                                          }
+                                          
+                                          // Update ride payment status  
+                                          final rideRepo = ref.read(rideRepositoryProvider);
+                                          await rideRepo.processCashPayment(ride.id); // Marks as completed
+                                        } catch (e) {
+                                          print('❌ Payment processing failed: $e');
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text('Payment processing failed: $e'),
+                                                backgroundColor: Colors.orange,
+                                                duration: const Duration(seconds: 3),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      });
+                                    } else if (context.mounted) {
+                                      // Cash payment - show message to collect cash
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Row(
+                                                children: [
+                                                  Icon(Icons.check_circle, color: Colors.white, size: 20),
+                                                  SizedBox(width: 8),
+                                                  Text(
+                                                    'Ride Completed!',
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'Collect Cash: \$${fareAmount.toStringAsFixed(2)}',
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.orangeAccent,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              const Text(
+                                                'Click "Accept Cash Payment" below',
+                                                style: TextStyle(fontSize: 13),
+                                              ),
+                                            ],
+                                          ),
+                                          backgroundColor: Colors.orange[700],
                                           duration: const Duration(seconds: 4),
                                           behavior: SnackBarBehavior.floating,
                                         ),
@@ -555,6 +692,142 @@ class DriverActiveRidesScreen extends ConsumerWidget {
                                   ],
                                 ),
                               ),
+                            ),
+                          ],
+                        ),
+                      // Accept Cash Payment button (for completed cash rides)
+                      if (needsCashConfirmation)
+                        Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.orange.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.orange.withValues(alpha: 0.3),
+                                  width: 2,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.payments,
+                                    color: Colors.orange,
+                                    size: 32,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Cash Payment Pending',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Amount: \$${ride.fare.toStringAsFixed(2)}',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () async {
+                                  // Process cash payment
+                                  try {
+                                    final rideRepo = ref.read(rideRepositoryProvider);
+                                    
+                                    await rideRepo.processCashPayment(ride.id);
+
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Row(
+                                                children: [
+                                                  Icon(Icons.check_circle, color: Colors.white, size: 20),
+                                                  SizedBox(width: 8),
+                                                  Text(
+                                                    'Cash Payment Accepted!',
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'Amount received: \$${ride.fare.toStringAsFixed(2)}',
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.greenAccent,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          backgroundColor: Colors.green[700],
+                                          duration: const Duration(seconds: 3),
+                                          behavior: SnackBarBehavior.floating,
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('Error: $e'),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                                icon: const Icon(Icons.payments, size: 20),
+                                label: const Text(
+                                  'Accept Cash Payment',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  elevation: 4,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Confirm that you have received the cash payment',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                                fontStyle: FontStyle.italic,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../Home_Screen/modern_home_providers.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -8,6 +9,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     bool notificationsEnabled = true; // TODO: Get from storage/preferences
     bool locationEnabled = true; // TODO: Get from storage/preferences
+    final useModernHome = ref.watch(useModernHomeScreenProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -48,6 +50,23 @@ class SettingsScreen extends ConsumerWidget {
 
             // App Section
             _buildSectionHeader('App'),
+            _buildSwitchTile(
+              title: 'Modern Home Screen',
+              subtitle: 'Use new modern home layout',
+              value: useModernHome,
+              onChanged: (value) {
+                ref.read(useModernHomeScreenProvider.notifier).state = value;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(value 
+                        ? 'Switched to modern home screen' 
+                        : 'Switched to classic home screen'),
+                    backgroundColor: Colors.green,
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              },
+            ),
             _buildMenuTile(
               icon: Icons.language,
               title: 'Language',
@@ -77,7 +96,7 @@ class SettingsScreen extends ConsumerWidget {
             _buildMenuTile(
               icon: Icons.info_outline,
               title: 'App Version',
-              subtitle: '1.0.0',
+              subtitle: '1.0.2',
               onTap: () {
                 // TODO: Show version details
               },

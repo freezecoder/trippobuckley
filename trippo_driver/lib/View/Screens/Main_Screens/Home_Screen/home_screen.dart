@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trippo_driver/Container/Repositories/firestore_repo.dart';
 import 'package:trippo_driver/Container/utils/firebase_messaging.dart';
 import 'package:trippo_driver/View/Screens/Main_Screens/Home_Screen/home_logics.dart';
 import 'package:trippo_driver/View/Screens/Main_Screens/Home_Screen/home_providers.dart';
+import 'package:trippo_driver/View/Screens/Main_Screens/Delivery_Screens/pending_deliveries_screen.dart';
 import '../../../../Container/utils/set_blackmap.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 
@@ -31,6 +33,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     MessagingService().init(context);
+    
+    // Start listening for delivery requests when driver is online
+    // This will be triggered when driver goes online
   }
 
   @override
@@ -108,7 +113,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                           ),
                         ],
-                      ))
+                      )),
+                  
+                  // Floating Action Button for Delivery Requests
+                  if (ref.watch(homeScreenIsDriverActiveProvider))
+                    Positioned(
+                      bottom: 20,
+                      right: 20,
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('rideRequests')
+                            .where('isDelivery', isEqualTo: true)
+                            .where('status', isEqualTo: 'pending')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          final pendingCount = snapshot.data?.docs.length ?? 0;
+                          
+                          return FloatingActionButton.extended(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const PendingDeliveriesScreen(),
+                                ),
+                              );
+                            },
+                            backgroundColor: Colors.orange,
+                            icon: Stack(
+                              children: [
+                                const Icon(Icons.delivery_dining, size: 28),
+                                if (pendingCount > 0)
+                                  Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Text(
+                                        pendingCount.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            label: Text(
+                              pendingCount > 0 
+                                  ? 'Deliveries ($pendingCount)' 
+                                  : 'Deliveries',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                 ],
               ))),
     );

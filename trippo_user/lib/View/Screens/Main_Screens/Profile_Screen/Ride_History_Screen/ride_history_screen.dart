@@ -15,7 +15,7 @@ class RideHistoryScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ride History'),
+        title: const Text('Ride & Delivery History'),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
       ),
@@ -98,6 +98,38 @@ class RideHistoryScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Delivery Badge (if it's a delivery)
+                          if (ride.isDelivery)
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [Colors.orange[700]!, Colors.deepOrange[600]!],
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text(
+                                    '📦 DELIVERY',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                  if (ride.deliveryCategory != null) ...[
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      _getCategoryIcon(ride.deliveryCategory),
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
                           // Status and Fare Row
                           Row(
                             children: [
@@ -381,6 +413,19 @@ class RideHistoryScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _getCategoryIcon(String? category) {
+    switch (category?.toLowerCase()) {
+      case 'food':
+        return '🍔';
+      case 'medicines':
+        return '💊';
+      case 'groceries':
+        return '🛒';
+      default:
+        return '📦';
+    }
   }
 
   String _formatDate(DateTime dateTime) {

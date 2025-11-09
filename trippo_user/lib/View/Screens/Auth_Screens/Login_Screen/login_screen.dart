@@ -131,7 +131,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .bodySmall!
                                       .copyWith(
                                           fontFamily: "bold", fontSize: 12),
-                                ))
+                                )),
+                            const SizedBox(height: 20),
+                            // Version number at bottom
+                            Text(
+                              "Version 1.0.2",
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 11,
+                                fontFamily: "regular",
+                              ),
+                            ),
                           ],
                         ),
                       ),

@@ -7,6 +7,7 @@ import 'package:btrips_unified/data/providers/auth_providers.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Profile_Screen/Edit_Profile_Screen/edit_profile_screen.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Profile_Screen/Ride_History_Screen/ride_history_screen.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Profile_Screen/Payment_Methods_Screen/payment_methods_screen.dart';
+import 'package:btrips_unified/View/Screens/Main_Screens/Profile_Screen/Payment_History_Screen/payment_history_screen.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Profile_Screen/Settings_Screen/settings_screen.dart';
 import 'package:btrips_unified/View/Screens/Main_Screens/Profile_Screen/Help_Support_Screen/help_support_screen.dart';
 import 'package:btrips_unified/features/shared/presentation/screens/edit_contact_info_screen.dart';
@@ -116,11 +117,26 @@ class ProfileScreen extends ConsumerWidget {
                 context,
                 icon: Icons.payment,
                 title: 'Payment Methods',
+                subtitle: 'Manage saved cards',
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const PaymentMethodsScreen(),
+                    ),
+                  );
+                },
+              ),
+              _buildMenuItem(
+                context,
+                icon: Icons.receipt_long,
+                title: 'Payment History',
+                subtitle: 'View all transactions',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PaymentHistoryScreen(),
                     ),
                   );
                 },

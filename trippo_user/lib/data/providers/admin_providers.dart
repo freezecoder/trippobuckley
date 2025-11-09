@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../repositories/admin_repository.dart';
 import '../models/user_model.dart';
+import '../models/driver_model.dart';
 import '../models/admin_action_model.dart';
 import '../models/ride_request_model.dart';
 import '../../core/enums/ride_status.dart';
@@ -11,10 +12,60 @@ final adminRepositoryProvider = Provider<AdminRepository>((ref) {
   return AdminRepository();
 });
 
-/// Provider for fetching all drivers
+/// Provider for fetching all drivers (basic user info)
 final allDriversProvider = FutureProvider<List<UserModel>>((ref) async {
   final adminRepo = ref.watch(adminRepositoryProvider);
   return await adminRepo.getAllDrivers(limit: 100);
+});
+
+/// Combined driver data with email
+class DriverWithEmail {
+  final DriverModel driver;
+  final String email;
+  final String name;
+
+  DriverWithEmail({
+    required this.driver,
+    required this.email,
+    required this.name,
+  });
+}
+
+/// Provider for fetching all drivers with earnings data and email
+final allDriversWithEarningsProvider = FutureProvider<List<DriverWithEmail>>((ref) async {
+  try {
+    final firestore = FirebaseFirestore.instance;
+    
+    // Get driver data
+    final driversSnapshot = await firestore
+        .collection('drivers')
+        .orderBy('earnings', descending: true)
+        .limit(100)
+        .get();
+    
+    // Get corresponding user data for emails
+    final List<DriverWithEmail> driversWithEmail = [];
+    
+    for (final doc in driversSnapshot.docs) {
+      final driverModel = DriverModel.fromFirestore(doc.data(), doc.id);
+      
+      // Get user document to fetch email
+      final userDoc = await firestore.collection('users').doc(doc.id).get();
+      final email = userDoc.exists ? (userDoc.data()?['email'] ?? 'N/A') : 'N/A';
+      final name = userDoc.exists ? (userDoc.data()?['name'] ?? 'N/A') : 'N/A';
+      
+      driversWithEmail.add(DriverWithEmail(
+        driver: driverModel,
+        email: email,
+        name: name,
+      ));
+    }
+    
+    return driversWithEmail;
+  } catch (e) {
+    print('Error fetching drivers with earnings: $e');
+    return [];
+  }
 });
 
 /// Provider for fetching all users (passengers)
@@ -267,5 +318,79 @@ final refreshRidesProvider = Provider<void Function()>((ref) {
   return () {
     ref.invalidate(allRidesProvider);
   };
+});
+
+/// Model for admin invoice
+class AdminInvoice {
+  final String id;
+  final String userId;
+  final String userEmail;
+  final double amount;
+  final String description;
+  final String adminEmail;
+  final String? stripePaymentIntentId;
+  final String status;
+  final DateTime createdAt;
+  final String? error;
+
+  AdminInvoice({
+    required this.id,
+    required this.userId,
+    required this.userEmail,
+    required this.amount,
+    required this.description,
+    required this.adminEmail,
+    this.stripePaymentIntentId,
+    required this.status,
+    required this.createdAt,
+    this.error,
+  });
+
+  factory AdminInvoice.fromFirestore(Map<String, dynamic> data, String id) {
+    return AdminInvoice(
+      id: id,
+      userId: data['userId'] ?? '',
+      userEmail: data['userEmail'] ?? '',
+      amount: (data['amount'] ?? 0.0).toDouble(),
+      description: data['description'] ?? '',
+      adminEmail: data['adminEmail'] ?? '',
+      stripePaymentIntentId: data['stripePaymentIntentId'],
+      status: data['status'] ?? 'pending',
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      error: data['error'],
+    );
+  }
+}
+
+/// Provider for fetching all admin invoices
+final allAdminInvoicesProvider = StreamProvider<List<AdminInvoice>>((ref) {
+  final firestore = FirebaseFirestore.instance;
+  
+  return firestore
+      .collection('adminInvoices')
+      .orderBy('createdAt', descending: true)
+      .limit(100)
+      .snapshots()
+      .map((snapshot) {
+    return snapshot.docs
+        .map((doc) => AdminInvoice.fromFirestore(doc.data(), doc.id))
+        .toList();
+  });
+});
+
+/// Provider for fetching admin invoices for a specific user
+final userAdminInvoicesProvider = StreamProvider.family<List<AdminInvoice>, String>((ref, userId) {
+  final firestore = FirebaseFirestore.instance;
+  
+  return firestore
+      .collection('adminInvoices')
+      .where('userId', isEqualTo: userId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) {
+    return snapshot.docs
+        .map((doc) => AdminInvoice.fromFirestore(doc.data(), doc.id))
+        .toList();
+  });
 });
 

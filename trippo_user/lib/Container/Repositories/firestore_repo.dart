@@ -342,6 +342,115 @@ class FirestoreRepo {
     }
   }
 
+  /// Add delivery request to Firestore
+  Future<String?> addDeliveryRequestToDB({
+    required BuildContext context,
+    required WidgetRef ref,
+    required GeoPoint pickupLocation,
+    required String pickupAddress,
+    required GeoPoint dropoffLocation,
+    required String dropoffAddress,
+    required String deliveryCategory,
+    required String itemsDescription,
+    required double itemCost,
+    required String verificationCode,
+    required double fare,
+    required double distance,
+  }) async {
+    try {
+      // Check authentication before accessing Firestore
+      if (auth.currentUser == null || auth.currentUser!.email == null) {
+        if (context.mounted) {
+          ErrorNotification().showError(context, "Please sign in to request a delivery");
+        }
+        return null;
+      }
+
+      debugPrint('📦 Creating delivery request:');
+      debugPrint('   Pickup: $pickupAddress');
+      debugPrint('   Dropoff: $dropoffAddress');
+      debugPrint('   Category: $deliveryCategory');
+      debugPrint('   Verification Code: $verificationCode');
+
+      // Get payment information from providers
+      final selectedPaymentMethod = ref.read(homeScreenSelectedPaymentMethodProvider);
+      final payCash = ref.read(homeScreenPayCashProvider);
+      
+      // Determine payment method type
+      String paymentMethod = 'cash'; // Default
+      String? paymentMethodId;
+      String? paymentMethodLast4;
+      String? paymentMethodBrand;
+      
+      if (!payCash && selectedPaymentMethod != null) {
+        paymentMethod = 'card';
+        paymentMethodId = selectedPaymentMethod.stripePaymentMethodId;
+        paymentMethodLast4 = selectedPaymentMethod.last4;
+        paymentMethodBrand = selectedPaymentMethod.brand;
+        debugPrint('💳 Delivery will be paid with card: ${selectedPaymentMethod.fullDisplayString}');
+      } else {
+        debugPrint('💵 Delivery will be paid with cash');
+      }
+
+      // Create delivery request in Firestore
+      final docRef = await db.collection('rideRequests').add({
+        "userId": auth.currentUser!.uid,
+        "driverId": null,
+        "userEmail": auth.currentUser!.email,
+        "driverEmail": null,
+        "status": "pending",
+        "pickupLocation": pickupLocation,
+        "pickupAddress": pickupAddress,
+        "dropoffLocation": dropoffLocation,
+        "dropoffAddress": dropoffAddress,
+        "scheduledTime": null,
+        "requestedAt": FieldValue.serverTimestamp(),
+        "acceptedAt": null,
+        "startedAt": null,
+        "completedAt": null,
+        "vehicleType": "Any", // Delivery can be done with any vehicle
+        "fare": fare,
+        "distance": distance,
+        "duration": 0,
+        "route": null,
+        // Payment information
+        "paymentMethod": paymentMethod,
+        "paymentMethodId": paymentMethodId,
+        "paymentMethodLast4": paymentMethodLast4,
+        "paymentMethodBrand": paymentMethodBrand,
+        "paymentStatus": "pending",
+        "stripePaymentIntentId": null,
+        // Delivery-specific fields
+        "isDelivery": true,
+        "deliveryCategory": deliveryCategory,
+        "deliveryItemsDescription": itemsDescription,
+        "deliveryItemCost": itemCost,
+        "deliveryVerificationCode": verificationCode,
+        "deliveryCodeVerified": false,
+      });
+
+      debugPrint('✅ Delivery request created with ID: ${docRef.id}');
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Delivery requested successfully! Waiting for driver...'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      
+      return docRef.id;
+    } catch (e) {
+      debugPrint('❌ Error creating delivery request: $e');
+      if (context.mounted) {
+        ErrorNotification().showError(context, "Failed to request delivery: ${e.toString()}");
+      }
+      return null;
+    }
+  }
+
   void nullifyUserRides(context) async {
     try {
       // Check authentication before accessing Firestore

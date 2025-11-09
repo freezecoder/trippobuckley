@@ -125,14 +125,41 @@ service cloud.firestore {
         (isDriver() && resource.data.driverId == null && 
          request.resource.data.driverId == request.auth.uid &&
          resource.data.status == 'pending') ||
-        // Driver updating their assigned ride (including cancellation and rating)
-        (resource.data.driverId == request.auth.uid && isDriver())
+        // Driver updating their assigned ride (status, payment, cancellation, rating)
+        (resource.data.driverId == request.auth.uid && isDriver()) ||
+        // DELIVERY FIX: Allow driver to update if driverId matches (even without userType check)
+        // This handles the case where userType might not be set yet
+        (resource.data.driverId == request.auth.uid &&
+         request.resource.data.keys().hasAny(['status', 'startedAt', 'deliveredAt', 'completedAt']))
       );
       
       // Users can delete their own pending requests
       allow delete: if isAuthenticated() && 
                       resource.data.userId == request.auth.uid &&
                       resource.data.status == 'pending';
+      
+      // Messages Subcollection (Live Chat)
+      // ============================================
+      match /messages/{messageId} {
+        // Both customer and driver can read messages for their ride/delivery
+        allow read: if isAuthenticated() && (
+          get(/databases/$(database)/documents/rideRequests/$(requestId)).data.userId == request.auth.uid ||
+          get(/databases/$(database)/documents/rideRequests/$(requestId)).data.driverId == request.auth.uid
+        );
+        
+        // Both can create messages ONLY when ride is active (accepted or ongoing)
+        allow create: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/rideRequests/$(requestId)).data.userId == request.auth.uid ||
+           get(/databases/$(database)/documents/rideRequests/$(requestId)).data.driverId == request.auth.uid) &&
+          (get(/databases/$(database)/documents/rideRequests/$(requestId)).data.status in ['accepted', 'ongoing']) &&
+          request.resource.data.senderId == request.auth.uid;
+        
+        // Can update own messages (e.g., mark as read)
+        allow update: if isAuthenticated() && resource.data.senderId == request.auth.uid;
+        
+        // No deletion - keep chat history
+        allow delete: if false;
+      }
     }
     
     
@@ -145,15 +172,15 @@ service cloud.firestore {
         resource.data.driverId == request.auth.uid
       );
       
-      // Allow drivers to create history when completing/cancelling rides
-      // Allow users/drivers to update for ratings
+      // Allow anyone to create history if they're the driver or user
+      // RELAXED for deliveries - don't require strict userType check
       allow create: if isAuthenticated() && (
-        (request.resource.data.driverId == request.auth.uid && isDriver()) ||
-        (request.resource.data.userId == request.auth.uid && isRegularUser())
+        (request.resource.data.driverId == request.auth.uid) ||
+        (request.resource.data.userId == request.auth.uid)
       );
       
       // Users can update to add their rating and feedback
-      // Drivers can update to add their rating and feedback
+      // Drivers can update to add their rating and feedback, and payment status
       allow update: if isAuthenticated() && (
         // User rating driver (can update userRating and/or userFeedback only)
         (resource.data.userId == request.auth.uid && 
@@ -164,7 +191,11 @@ service cloud.firestore {
         (resource.data.driverId == request.auth.uid && 
          isDriver() &&
          (request.resource.data.diff(resource.data).affectedKeys().hasAny(['driverRating', 'driverFeedback']) &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['driverRating', 'driverFeedback'])))
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['driverRating', 'driverFeedback']))) ||
+        // Driver updating payment status (for cash payments)
+        (resource.data.driverId == request.auth.uid && 
+         isDriver() &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['paymentStatus', 'paymentProcessedAt']))
       );
       
       // Prevent deletion
@@ -290,6 +321,27 @@ service cloud.firestore {
       allow create: if false;
       
       // Transactions are immutable (audit trail)
+      allow update, delete: if false;
+    }
+    
+    // Admin Invoices Collection
+    // Stores manual invoices created by admins
+    match /adminInvoices/{invoiceId} {
+      // Check if user is an admin
+      function isAdmin() {
+        return isAuthenticated() && getUserType() == 'admin';
+      }
+      
+      // Admins can read all invoices, users can read their own invoices
+      allow read: if isAuthenticated() && (
+        isAdmin() ||                                    // Admins see all
+        resource.data.userId == request.auth.uid       // Users see their own
+      );
+      
+      // Only cloud functions can create invoices (not even admins directly)
+      allow create: if false;
+      
+      // Invoices are immutable (audit trail)
       allow update, delete: if false;
     }
     

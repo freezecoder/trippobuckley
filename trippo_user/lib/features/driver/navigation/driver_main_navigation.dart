@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Placeholder screens - will be migrated
 import '../home/presentation/screens/driver_home_screen.dart';
+import '../deliveries/presentation/screens/driver_deliveries_main_screen.dart';
 import '../payments/presentation/screens/driver_payment_screen.dart';
 import '../rides/presentation/screens/driver_rides_main_screen.dart';
 import '../profile/presentation/screens/driver_profile_screen.dart';
@@ -20,7 +22,8 @@ class DriverMainNavigation extends ConsumerWidget {
 
     final List<Widget> screens = [
       const DriverHomeScreen(),
-      const DriverRidesMainScreen(), // 2nd position - main feature!
+      const DriverDeliveriesMainScreen(), // NEW: Deliveries tab with Pending/Active!
+      const DriverRidesMainScreen(),
       const DriverPaymentScreen(),
       const DriverProfileScreen(),
     ];
@@ -31,23 +34,29 @@ class DriverMainNavigation extends ConsumerWidget {
         children: screens,
       ),
       bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(
+        destinations: [
+          const NavigationDestination(
             icon: Icon(Icons.home_outlined),
             label: "Home",
             selectedIcon: Icon(Icons.home),
           ),
-          NavigationDestination(
+          // NEW: Deliveries tab with live badge
+          const NavigationDestination(
+            icon: Icon(Icons.delivery_dining_outlined),
+            label: "Deliveries",
+            selectedIcon: Icon(Icons.delivery_dining),
+          ),
+          const NavigationDestination(
             icon: Icon(Icons.receipt_long_outlined),
             label: "Rides",
             selectedIcon: Icon(Icons.receipt_long),
           ),
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(Icons.attach_money_outlined),
             label: "Earnings",
             selectedIcon: Icon(Icons.attach_money),
           ),
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(Icons.person_outline),
             label: "Profile",
             selectedIcon: Icon(Icons.person),

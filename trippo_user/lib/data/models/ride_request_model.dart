@@ -17,7 +17,11 @@ class RideRequestModel {
   final DateTime requestedAt;
   final DateTime? acceptedAt;
   final DateTime? startedAt;
+  final DateTime? deliveredAt;        // When driver marked as delivered
+  final DateTime? confirmedAt;        // When customer confirmed receipt
   final DateTime? completedAt;
+  final DateTime? cancelledAt;        // If/when delivery was cancelled
+  final DateTime? paymentProcessedAt; // When payment was processed
   final String vehicleType;
   final double fare;
   final double distance;
@@ -36,6 +40,20 @@ class RideRequestModel {
   final String? paymentMethodBrand; // Card brand like 'visa', 'mastercard' (null for cash)
   final String? stripePaymentIntentId; // Stripe payment intent ID (null for cash or before payment)
   final String? paymentStatus; // 'pending', 'completed', 'failed', 'cancelled'
+  final String? paymentError; // Error message if payment failed
+  
+  // Delivery fields
+  final bool isDelivery; // true if this is a delivery request, false for regular ride
+  final String? deliveryCategory; // 'food', 'medicines', 'groceries', 'other'
+  final String? deliveryItemsDescription; // Description of items to be delivered
+  final double? deliveryItemCost; // Cost of items if driver needs to pay
+  final String? deliveryVerificationCode; // 5-digit code for pickup verification
+  final bool deliveryCodeVerified; // Whether the verification code was used
+  
+  // Confirmation & Cancellation tracking
+  final bool confirmedByCustomer; // Whether customer confirmed receipt
+  final String? cancelledBy; // Who cancelled: 'user', 'driver', 'system'
+  final String? cancellationReason; // Reason for cancellation
 
   RideRequestModel({
     required this.id,
@@ -52,7 +70,11 @@ class RideRequestModel {
     required this.requestedAt,
     this.acceptedAt,
     this.startedAt,
+    this.deliveredAt,
+    this.confirmedAt,
     this.completedAt,
+    this.cancelledAt,
+    this.paymentProcessedAt,
     required this.vehicleType,
     required this.fare,
     required this.distance,
@@ -69,6 +91,16 @@ class RideRequestModel {
     this.paymentMethodBrand,
     this.stripePaymentIntentId,
     this.paymentStatus = 'pending',
+    this.paymentError,
+    this.isDelivery = false, // Default to regular ride
+    this.deliveryCategory,
+    this.deliveryItemsDescription,
+    this.deliveryItemCost,
+    this.deliveryVerificationCode,
+    this.deliveryCodeVerified = false,
+    this.confirmedByCustomer = false,
+    this.cancelledBy,
+    this.cancellationReason,
   });
 
   /// Create RideRequestModel from Firestore document
@@ -88,7 +120,11 @@ class RideRequestModel {
       requestedAt: (data['requestedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       acceptedAt: (data['acceptedAt'] as Timestamp?)?.toDate(),
       startedAt: (data['startedAt'] as Timestamp?)?.toDate(),
+      deliveredAt: (data['deliveredAt'] as Timestamp?)?.toDate(),
+      confirmedAt: (data['confirmedAt'] as Timestamp?)?.toDate(),
       completedAt: (data['completedAt'] as Timestamp?)?.toDate(),
+      cancelledAt: (data['cancelledAt'] as Timestamp?)?.toDate(),
+      paymentProcessedAt: (data['paymentProcessedAt'] as Timestamp?)?.toDate(),
       vehicleType: data['vehicleType'] ?? 'Car',
       fare: (data['fare'] ?? 0.0).toDouble(),
       distance: (data['distance'] ?? 0.0).toDouble(),
@@ -105,6 +141,16 @@ class RideRequestModel {
       paymentMethodBrand: data['paymentMethodBrand'] as String?,
       stripePaymentIntentId: data['stripePaymentIntentId'] as String?,
       paymentStatus: data['paymentStatus'] ?? 'pending',
+      paymentError: data['paymentError'] as String?,
+      isDelivery: data['isDelivery'] ?? false,
+      deliveryCategory: data['deliveryCategory'] as String?,
+      deliveryItemsDescription: data['deliveryItemsDescription'] as String?,
+      deliveryItemCost: (data['deliveryItemCost'] as num?)?.toDouble(),
+      deliveryVerificationCode: data['deliveryVerificationCode'] as String?,
+      deliveryCodeVerified: data['deliveryCodeVerified'] ?? false,
+      confirmedByCustomer: data['confirmedByCustomer'] ?? false,
+      cancelledBy: data['cancelledBy'] as String?,
+      cancellationReason: data['cancellationReason'] as String?,
     );
   }
 
@@ -124,7 +170,11 @@ class RideRequestModel {
       'requestedAt': Timestamp.fromDate(requestedAt),
       'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
       'startedAt': startedAt != null ? Timestamp.fromDate(startedAt!) : null,
+      'deliveredAt': deliveredAt != null ? Timestamp.fromDate(deliveredAt!) : null,
+      'confirmedAt': confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
       'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+      'paymentProcessedAt': paymentProcessedAt != null ? Timestamp.fromDate(paymentProcessedAt!) : null,
       'vehicleType': vehicleType,
       'fare': fare,
       'distance': distance,
@@ -141,6 +191,16 @@ class RideRequestModel {
       'paymentMethodBrand': paymentMethodBrand,
       'stripePaymentIntentId': stripePaymentIntentId,
       'paymentStatus': paymentStatus,
+      'paymentError': paymentError,
+      'isDelivery': isDelivery,
+      'deliveryCategory': deliveryCategory,
+      'deliveryItemsDescription': deliveryItemsDescription,
+      'deliveryItemCost': deliveryItemCost,
+      'deliveryVerificationCode': deliveryVerificationCode,
+      'deliveryCodeVerified': deliveryCodeVerified,
+      'confirmedByCustomer': confirmedByCustomer,
+      'cancelledBy': cancelledBy,
+      'cancellationReason': cancellationReason,
     };
   }
 
@@ -207,6 +267,84 @@ class RideRequestModel {
     }
   }
 
+  // ============================================================================
+  // NEW: Stage Duration Calculations for Analytics
+  // ============================================================================
+
+  /// Time taken for driver to accept after request (in minutes)
+  Duration? get acceptanceDuration {
+    if (acceptedAt == null) return null;
+    return acceptedAt!.difference(requestedAt);
+  }
+
+  /// Time from acceptance to starting delivery (driver going to pickup)
+  Duration? get pickupDuration {
+    if (startedAt == null || acceptedAt == null) return null;
+    return startedAt!.difference(acceptedAt!);
+  }
+
+  /// Time from start to delivery (actual delivery time)
+  Duration? get deliveryDuration {
+    if (deliveredAt == null || startedAt == null) return null;
+    return deliveredAt!.difference(startedAt!);
+  }
+
+  /// Time for customer to confirm after delivery
+  Duration? get confirmationDuration {
+    if (confirmedAt == null || deliveredAt == null) return null;
+    return confirmedAt!.difference(deliveredAt!);
+  }
+
+  /// Total time from request to completion
+  Duration? get totalDuration {
+    if (completedAt == null) return null;
+    return completedAt!.difference(requestedAt);
+  }
+
+  /// Time until cancellation (if cancelled)
+  Duration? get cancellationDuration {
+    if (cancelledAt == null) return null;
+    return cancelledAt!.difference(requestedAt);
+  }
+
+  // Formatted duration strings
+  String get acceptanceDurationFormatted => _formatDuration(acceptanceDuration);
+  String get pickupDurationFormatted => _formatDuration(pickupDuration);
+  String get deliveryDurationFormatted => _formatDuration(deliveryDuration);
+  String get confirmationDurationFormatted => _formatDuration(confirmationDuration);
+  String get totalDurationFormatted => _formatDuration(totalDuration);
+
+  /// Helper to format durations
+  String _formatDuration(Duration? duration) {
+    if (duration == null) return 'N/A';
+    
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+    
+    if (minutes < 1) {
+      return '${seconds}s';
+    } else if (minutes < 60) {
+      return '${minutes}m ${seconds}s';
+    } else {
+      final hours = minutes ~/ 60;
+      final mins = minutes % 60;
+      return '${hours}h ${mins}m';
+    }
+  }
+
+  // Performance indicators
+  /// Was driver acceptance fast? (< 2 minutes)
+  bool get wasFastAcceptance => acceptanceDuration != null && acceptanceDuration!.inMinutes < 2;
+
+  /// Was delivery fast? (< 30 minutes)
+  bool get wasFastDelivery => deliveryDuration != null && deliveryDuration!.inMinutes < 30;
+
+  /// Did customer confirm quickly? (< 5 minutes)
+  bool get wasQuickConfirmation => confirmationDuration != null && confirmationDuration!.inMinutes < 5;
+
+  /// Was overall delivery fast? (< 45 minutes total)
+  bool get wasFastOverall => totalDuration != null && totalDuration!.inMinutes < 45;
+
   /// Copy with method for immutability
   RideRequestModel copyWith({
     String? driverId,
@@ -214,8 +352,16 @@ class RideRequestModel {
     RideStatus? status,
     DateTime? acceptedAt,
     DateTime? startedAt,
+    DateTime? deliveredAt,
+    DateTime? confirmedAt,
     DateTime? completedAt,
+    DateTime? cancelledAt,
+    DateTime? paymentProcessedAt,
     double? fare,
+    bool? confirmedByCustomer,
+    String? cancelledBy,
+    String? cancellationReason,
+    String? paymentError,
   }) {
     return RideRequestModel(
       id: id,
@@ -232,12 +378,37 @@ class RideRequestModel {
       requestedAt: requestedAt,
       acceptedAt: acceptedAt ?? this.acceptedAt,
       startedAt: startedAt ?? this.startedAt,
+      deliveredAt: deliveredAt ?? this.deliveredAt,
+      confirmedAt: confirmedAt ?? this.confirmedAt,
       completedAt: completedAt ?? this.completedAt,
+      cancelledAt: cancelledAt ?? this.cancelledAt,
+      paymentProcessedAt: paymentProcessedAt ?? this.paymentProcessedAt,
       vehicleType: vehicleType,
       fare: fare ?? this.fare,
       distance: distance,
       duration: duration,
       route: route,
+      userRating: userRating,
+      driverRating: driverRating,
+      userFeedback: userFeedback,
+      driverFeedback: driverFeedback,
+      declinedBy: declinedBy,
+      paymentMethod: paymentMethod,
+      paymentMethodId: paymentMethodId,
+      paymentMethodLast4: paymentMethodLast4,
+      paymentMethodBrand: paymentMethodBrand,
+      stripePaymentIntentId: stripePaymentIntentId,
+      paymentStatus: paymentStatus,
+      paymentError: paymentError ?? this.paymentError,
+      isDelivery: isDelivery,
+      deliveryCategory: deliveryCategory,
+      deliveryItemsDescription: deliveryItemsDescription,
+      deliveryItemCost: deliveryItemCost,
+      deliveryVerificationCode: deliveryVerificationCode,
+      deliveryCodeVerified: deliveryCodeVerified,
+      confirmedByCustomer: confirmedByCustomer ?? this.confirmedByCustomer,
+      cancelledBy: cancelledBy ?? this.cancelledBy,
+      cancellationReason: cancellationReason ?? this.cancellationReason,
     );
   }
 

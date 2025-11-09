@@ -14,12 +14,19 @@ const PLACES_API_BASE = 'https://maps.googleapis.com/maps/api/place';
  * Places Autocomplete
  * Searches for places based on user input
  * 
- * Request: { input: string, country?: string, language?: string }
+ * Request: { 
+ *   input: string, 
+ *   country?: string, 
+ *   language?: string,
+ *   latitude?: number,
+ *   longitude?: number,
+ *   radius?: number (in meters)
+ * }
  * Response: { success: boolean, predictions: array }
  */
 exports.placesAutocomplete = functions.https.onCall(async (data, context) => {
   try {
-    const { input, country = 'us', language = 'en' } = data;
+    const { input, country = 'us', language = 'en', latitude, longitude, radius } = data;
 
     // Validate input
     if (!input || input.length < 2) {
@@ -29,17 +36,28 @@ exports.placesAutocomplete = functions.https.onCall(async (data, context) => {
       );
     }
 
-    console.log(`🔍 Autocomplete: "${input}" (country: ${country})`);
+    const hasLocation = latitude !== undefined && longitude !== undefined;
+    console.log(`🔍 Autocomplete: "${input}" (country: ${country}${hasLocation ? `, location: ${latitude},${longitude}` : ''})`);
+
+    // Build API params
+    const params = {
+      input,
+      key: GOOGLE_MAPS_API_KEY,
+      language,
+      components: `country:${country}`,
+    };
+
+    // Add location bias if coordinates provided
+    if (hasLocation) {
+      params.location = `${latitude},${longitude}`;
+      params.radius = radius || 50000; // Default 50km
+      console.log(`📍 Using location bias: ${params.location} (radius: ${params.radius}m)`);
+    }
 
     // Call Google Places API
     const url = `${PLACES_API_BASE}/autocomplete/json`;
     const response = await axios.get(url, {
-      params: {
-        input,
-        key: GOOGLE_MAPS_API_KEY,
-        language,
-        components: `country:${country}`,
-      },
+      params,
       timeout: 10000, // 10 second timeout
     });
 

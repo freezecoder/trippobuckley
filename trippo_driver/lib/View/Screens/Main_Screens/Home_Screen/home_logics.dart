@@ -12,6 +12,7 @@ import 'package:trippo_driver/Container/Repositories/firestore_repo.dart';
 import 'package:trippo_driver/Container/utils/error_notification.dart';
 import 'package:trippo_driver/View/Screens/Main_Screens/Home_Screen/home_providers.dart';
 import 'package:trippo_driver/View/Screens/Main_Screens/Home_Screen/home_screen.dart';
+import 'package:trippo_driver/View/Screens/Main_Screens/Home_Screen/delivery_listener.dart';
 
 class HomeLogics {
   /// [getDriverLoc] fetches a the drivers location as soon as user start the app
@@ -75,6 +76,10 @@ class HomeLogics {
       ref
           .watch(homeScreenIsDriverActiveProvider.notifier)
           .update((state) => true);
+      
+      // 🚚 Start listening for delivery requests
+      DeliveryListener.startListening(context);
+      debugPrint('🚚 Delivery listener started - driver will receive delivery notifications');
     } catch (e) {
       ErrorNotification().showError(context, "An Error Occurred $e");
     }
@@ -94,6 +99,10 @@ class HomeLogics {
       ref
           .read(globalFirestoreRepoProvider)
           .setDriverLocationStatus(context, null);
+      
+      // 🛑 Stop listening for delivery requests
+      DeliveryListener.stopListening();
+      debugPrint('🛑 Delivery listener stopped');
 
       await Future.delayed(const Duration(seconds: 2));
 

@@ -6,6 +6,7 @@ import '../../../../data/providers/ride_providers.dart';
 import '../../../../data/providers/auth_providers.dart';
 import '../../../../core/constants/route_constants.dart';
 import '../../../../data/models/ride_request_model.dart';
+import '../../../../features/shared/presentation/screens/ride_delivery_details_screen.dart';
 import '../Profile_Screen/Ride_History_Screen/ride_history_screen.dart';
 import 'widgets/driver_tracking_map.dart';
 import 'widgets/driver_info_card.dart';
@@ -61,7 +62,7 @@ class _UserRidesScreenState extends ConsumerState<UserRidesScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Rides'),
+        title: const Text('My Rides & Deliveries'),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
       ),
@@ -262,6 +263,19 @@ class _RideCard extends ConsumerWidget {
 
   const _RideCard({required this.ride});
 
+  String _getCategoryIcon(String? category) {
+    switch (category?.toLowerCase()) {
+      case 'food':
+        return '🍔';
+      case 'medicines':
+        return '💊';
+      case 'groceries':
+        return '🛒';
+      default:
+        return '📦';
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPending = ride.status.name == 'pending';
@@ -307,11 +321,56 @@ class _RideCard extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: InkWell(
+        onTap: () {
+          // Open unified details screen
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => RideDeliveryDetailsScreen(
+                rideId: ride.id,
+                isDriver: false,
+              ),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Delivery Badge (if it's a delivery)
+              if (ride.isDelivery)
+                Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.orange[700]!, Colors.deepOrange[600]!],
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        '📦 DELIVERY',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                      if (ride.deliveryCategory != null) ...[
+                        const SizedBox(width: 8),
+                        Text(
+                          _getCategoryIcon(ride.deliveryCategory),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
             // Status Header
             Row(
               children: [
@@ -379,6 +438,7 @@ class _RideCard extends ConsumerWidget {
               'Pickup',
               ride.pickupAddress,
               Colors.blue,
+              maxLines: 3,
             ),
             const SizedBox(height: 12),
             _buildLocationRow(
@@ -386,6 +446,7 @@ class _RideCard extends ConsumerWidget {
               'Dropoff',
               ride.dropoffAddress,
               Colors.red,
+              maxLines: 3,
             ),
 
             // Distance and Duration
@@ -580,6 +641,7 @@ class _RideCard extends ConsumerWidget {
             ],
           ],
         ),
+        ),
       ),
     );
   }
@@ -588,8 +650,9 @@ class _RideCard extends ConsumerWidget {
     IconData icon,
     String label,
     String address,
-    Color color,
-  ) {
+    Color color, {
+    int maxLines = 3,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -615,8 +678,8 @@ class _RideCard extends ConsumerWidget {
                   fontSize: 14,
                   color: Colors.white,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                maxLines: maxLines,
+                overflow: TextOverflow.visible,
               ),
             ],
           ),

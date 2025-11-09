@@ -73,6 +73,14 @@ class FirebaseConstants {
   static const String rideUserFeedback = 'userFeedback';
   static const String rideDriverFeedback = 'driverFeedback';
 
+  // Delivery Fields
+  static const String rideIsDelivery = 'isDelivery';
+  static const String rideDeliveryCategory = 'deliveryCategory';
+  static const String rideDeliveryItemsDescription = 'deliveryItemsDescription';
+  static const String rideDeliveryItemCost = 'deliveryItemCost';
+  static const String rideDeliveryVerificationCode = 'deliveryVerificationCode';
+  static const String rideDeliveryCodeVerified = 'deliveryCodeVerified';
+
   // FCM Topics
   static const String fcmDriversTopic = 'drivers';
   static const String fcmUsersTopic = 'users';

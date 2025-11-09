@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/firebase_constants.dart';
 import '../../core/enums/ride_status.dart';
@@ -549,6 +550,8 @@ class RideRepository {
   /// Get user's ride history
   Future<List<RideRequestModel>> getUserRideHistory(String userId) async {
     try {
+      debugPrint('📚 Fetching ride history for user: $userId');
+      
       final snapshot = await _firestore
           .collection(FirebaseConstants.rideHistoryCollection)
           .where(FirebaseConstants.rideUserId, isEqualTo: userId)
@@ -556,9 +559,23 @@ class RideRepository {
           .limit(FirebaseConstants.rideHistoryLimit)
           .get();
 
-      return snapshot.docs
-          .map((doc) => RideRequestModel.fromFirestore(doc.data(), doc.id))
+      debugPrint('📊 Found ${snapshot.docs.length} items in ride history');
+      
+      final rides = snapshot.docs
+          .map((doc) {
+            final data = doc.data();
+            final isDelivery = data['isDelivery'] ?? false;
+            debugPrint('   - ${isDelivery ? "📦 DELIVERY" : "🚗 Ride"}: ${doc.id} (${data['status']})');
+            return RideRequestModel.fromFirestore(data, doc.id);
+          })
           .toList();
+
+      final deliveryCount = rides.where((r) => r.isDelivery).length;
+      final rideCount = rides.where((r) => !r.isDelivery).length;
+      
+      debugPrint('   Total: $deliveryCount deliveries, $rideCount rides');
+
+      return rides;
     } catch (e) {
       // Handle missing index or empty collection gracefully
       final errorMessage = e.toString().toLowerCase();
@@ -568,6 +585,7 @@ class RideRepository {
         print('ℹ️ Ride history collection empty or index not created yet');
         return [];
       }
+      debugPrint('❌ Error fetching ride history: $e');
       throw Exception('Failed to get ride history: $e');
     }
   }
@@ -607,19 +625,32 @@ class RideRepository {
           .doc(rideId)
           .get();
 
-      if (!rideDoc.exists) return;
+      if (!rideDoc.exists) {
+        print('⚠️ Cannot move to history - document not found in rideRequests: $rideId');
+        return;
+      }
+
+      final rideData = rideDoc.data()!;
+      final isDelivery = rideData['isDelivery'] ?? false;
+      
+      print('📝 Moving ${isDelivery ? "DELIVERY" : "ride"} to history: $rideId');
+      print('   UserId: ${rideData['userId']}');
+      print('   Status: ${rideData['status']}');
+      print('   Fare: \$${rideData['fare']}');
 
       // Copy to history collection
       await _firestore
           .collection(FirebaseConstants.rideHistoryCollection)
           .doc(rideId)
-          .set(rideDoc.data()!);
+          .set(rideData);
+
+      print('✅ ${isDelivery ? "Delivery" : "Ride"} successfully moved to history collection');
 
       // Note: We don't delete from rideRequests immediately
       // This allows for a grace period for any ongoing operations
     } catch (e) {
       // Don't throw error, as the main operation (completing ride) succeeded
-      print('Warning: Failed to move ride to history: $e');
+      print('❌ Warning: Failed to move ride to history: $e');
     }
   }
 
@@ -644,6 +675,79 @@ class RideRepository {
       await batch.commit();
     } catch (e) {
       throw Exception('Failed to cleanup old rides: $e');
+    }
+  }
+
+  // ================== PAYMENT METHODS ==================
+
+  /// Process cash payment (honor system)
+  /// Driver confirms they received cash payment
+  Future<void> processCashPayment(String rideId) async {
+    try {
+      // Update payment status to completed for cash
+      final updates = {
+        'paymentStatus': 'completed',
+        'paymentProcessedAt': FieldValue.serverTimestamp(),
+      };
+
+      // Update in rideRequests
+      await _firestore
+          .collection(FirebaseConstants.rideRequestsCollection)
+          .doc(rideId)
+          .update(updates);
+
+      // Also update in rideHistory if it exists
+      final historyDoc = await _firestore
+          .collection(FirebaseConstants.rideHistoryCollection)
+          .doc(rideId)
+          .get();
+      
+      if (historyDoc.exists) {
+        await _firestore
+            .collection(FirebaseConstants.rideHistoryCollection)
+            .doc(rideId)
+            .update(updates);
+      }
+
+      print('✅ Cash payment recorded for ride $rideId');
+    } catch (e) {
+      throw Exception('Failed to process cash payment: $e');
+    }
+  }
+
+  /// Check if payment needs to be processed for a ride
+  /// Returns true if ride is card payment and payment is still pending
+  Future<bool> needsPaymentProcessing(String rideId) async {
+    try {
+      final rideDoc = await _firestore
+          .collection(FirebaseConstants.rideRequestsCollection)
+          .doc(rideId)
+          .get();
+
+      if (!rideDoc.exists) {
+        // Check history
+        final historyDoc = await _firestore
+            .collection(FirebaseConstants.rideHistoryCollection)
+            .doc(rideId)
+            .get();
+        
+        if (!historyDoc.exists) return false;
+
+        final data = historyDoc.data()!;
+        final paymentMethod = data['paymentMethod'] as String? ?? 'cash';
+        final paymentStatus = data['paymentStatus'] as String? ?? 'pending';
+        
+        return paymentMethod == 'card' && paymentStatus == 'pending';
+      }
+
+      final data = rideDoc.data()!;
+      final paymentMethod = data['paymentMethod'] as String? ?? 'cash';
+      final paymentStatus = data['paymentStatus'] as String? ?? 'pending';
+      
+      return paymentMethod == 'card' && paymentStatus == 'pending';
+    } catch (e) {
+      print('Error checking payment status: $e');
+      return false;
     }
   }
 }

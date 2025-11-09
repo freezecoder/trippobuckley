@@ -24,6 +24,8 @@ final userActiveRidesProvider = StreamProvider<List<RideRequestModel>>((ref) {
 });
 
 /// Provider for driver's active rides
+/// Includes ONLY: accepted, ongoing, and completed cash rides with pending payment
+/// Does NOT include pending rides (those are in pendingRideRequestsProvider)
 final driverActiveRidesProvider = StreamProvider<List<RideRequestModel>>((ref) {
   final currentUser = ref.watch(currentUserStreamProvider).value;
   if (currentUser == null || !currentUser.isDriver) {
@@ -32,8 +34,24 @@ final driverActiveRidesProvider = StreamProvider<List<RideRequestModel>>((ref) {
 
   final rideRepo = ref.watch(rideRepositoryProvider);
   return rideRepo.getDriverRideRequests(currentUser.uid).map((rides) {
-    // Filter only active rides
-    return rides.where((ride) => ride.isActive).toList();
+    // Filter to show ONLY:
+    // 1. Accepted rides (driver accepted, not yet started)
+    // 2. Ongoing rides (currently in progress)
+    // 3. Completed cash rides that need payment confirmation
+    return rides.where((ride) {
+      // Include accepted rides
+      if (ride.status.name == 'accepted') return true;
+      
+      // Include ongoing rides
+      if (ride.status.name == 'ongoing') return true;
+      
+      // Include completed cash rides that need payment confirmation
+      final isCompleted = ride.status.name == 'completed';
+      final isCashPayment = ride.paymentMethod == 'cash';
+      final paymentPending = ride.paymentStatus == 'pending';
+      
+      return isCompleted && isCashPayment && paymentPending;
+    }).toList();
   });
 });
 

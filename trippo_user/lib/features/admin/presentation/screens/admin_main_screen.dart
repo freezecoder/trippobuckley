@@ -7,6 +7,7 @@ import 'admin_users_screen.dart';
 import 'admin_trips_screen.dart';
 import 'admin_accounts_screen.dart';
 import 'admin_costs_screen.dart';
+import 'admin_payments_screen.dart';
 
 /// Provider for admin navigation state
 final adminNavigationStateProvider = StateProvider<int>((ref) => 0);
@@ -26,6 +27,7 @@ class AdminMainScreen extends ConsumerWidget {
       AdminTripsScreen(),
       AdminAccountsScreen(),
       AdminCostsScreen(),
+      AdminPaymentsScreen(),
     ];
 
     return Theme(
@@ -125,6 +127,11 @@ class AdminMainScreen extends ConsumerWidget {
               icon: Icon(Icons.attach_money_outlined),
               label: 'Costs',
               selectedIcon: Icon(Icons.attach_money),
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.payment_outlined),
+              label: 'Payments',
+              selectedIcon: Icon(Icons.payment),
             ),
           ],
           onDestinationSelected: (int selection) {

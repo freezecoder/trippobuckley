@@ -476,17 +476,37 @@ class _WhereToScreenState extends ConsumerState<WhereToScreen> {
     try {
       debugPrint('🔍 Searching for: "$query"');
 
+      // Get user's location for biasing results to nearby places
+      final pickupLocation = ref.read(homeScreenPickUpLocationProvider);
+      double? lat;
+      double? lng;
+      
+      if (pickupLocation != null) {
+        lat = pickupLocation.locationLatitude;
+        lng = pickupLocation.locationLongitude;
+        debugPrint('📍 Using location bias: $lat, $lng');
+      }
+
       if (kIsWeb) {
         // Web: Call Cloud Function
         debugPrint('🌐 Web: Calling placesAutocomplete Cloud Function');
         
+        final params = <String, dynamic>{
+          'input': query,
+          'country': 'us',
+          'language': 'en',
+        };
+        
+        // Add location bias if available
+        if (lat != null && lng != null) {
+          params['latitude'] = lat;
+          params['longitude'] = lng;
+          params['radius'] = 50000; // 50km radius
+        }
+        
         final result = await _functions!
             .httpsCallable('placesAutocomplete')
-            .call({
-              'input': query,
-              'country': 'us',
-              'language': 'en',
-            });
+            .call(params);
 
         final response = Map<String, dynamic>.from(result.data);
         
@@ -510,10 +530,18 @@ class _WhereToScreenState extends ConsumerState<WhereToScreen> {
         // Mobile: Direct API call
         debugPrint('📱 Mobile: Calling GoogleMapsPlaces');
         
+        // Build location parameter for bias
+        Location? location;
+        if (lat != null && lng != null) {
+          location = Location(lat: lat, lng: lng);
+        }
+        
         final response = await _places!.autocomplete(
           query,
           components: [Component(Component.country, "us")],
           language: "en",
+          location: location,
+          radius: location != null ? 50000 : null, // 50km radius if location available
         );
 
         debugPrint('📡 Status: ${response.status}');
@@ -812,9 +840,9 @@ class _WhereToScreenState extends ConsumerState<WhereToScreen> {
                   children: [
                     const CircularProgressIndicator(color: Colors.blue),
                     const SizedBox(width: 16),
-                    Text(
-                      kIsWeb ? 'Calling Cloud Function...' : 'Searching...',
-                      style: const TextStyle(color: Colors.blue),
+                    const Text(
+                      'Searching...',
+                      style: TextStyle(color: Colors.blue),
                     ),
                   ],
                 ),
